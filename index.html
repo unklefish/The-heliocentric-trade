@@ -1,0 +1,829 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ENA Heliocentric Thesis</title>
+<meta charset="utf-8">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+  /* Thesis deck. Full-screen vertical slides; each = claim, one floating visual, two points, takeaway. Monochrome by design. */
+  :root{
+    --bg:#070707; --ink:#F5F5F3; --mid:#A3A3A0; --muted:#6B6B68;
+    --rule:rgba(255,255,255,.08); --line:rgba(255,255,255,.14); --white:#F5F5F3; --black:#070707;
+    --f:"Geist", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --m:"Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-snap-type:y mandatory;background:var(--bg)}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+  body{overflow-x:hidden}
+  a{color:inherit} button{font-family:inherit;color:inherit}
+  :focus-visible{outline:2px solid var(--white);outline-offset:3px;border-radius:8px}
+
+  .deck{position:relative;perspective:1400px;perspective-origin:50% 40%}
+  .slide{position:relative;min-height:100vh;min-height:100dvh;padding:58px 18px 96px;display:flex;align-items:center;
+    scroll-snap-align:start;transform-style:preserve-3d;
+    background:radial-gradient(900px 620px at 78% 28%,#151516 0%,rgba(21,21,22,0) 70%),var(--bg)}
+  .inner{width:100%;max-width:1160px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr)}
+  .q{font-family:var(--m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;display:flex;align-items:center;gap:8px}
+  .q:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--white);box-shadow:0 0 12px rgba(255,255,255,.5)}
+  h1{font-size:clamp(46px,12.5vw,100px);font-weight:600;letter-spacing:-.055em;line-height:.93;margin:0 0 18px}
+  h1 .dim{color:var(--muted)}
+  h2{font-size:clamp(25px,6.5vw,48px);font-weight:600;letter-spacing:-.042em;line-height:1.04;margin:0 0 14px;max-width:20ch;text-wrap:balance}
+  .sub{font-size:clamp(16px,4.3vw,22px);line-height:1.4;color:var(--mid);max-width:32ch;margin:0 0 22px;letter-spacing:-.01em}
+  .pts{list-style:none;margin:0 0 12px;padding:0;max-width:50ch}
+  .pts li{font-size:clamp(14.5px,3.8vw,17px);line-height:1.42;color:var(--mid);padding:5px 0 5px 16px;position:relative}
+  .pts li:before{content:"";position:absolute;left:0;top:13px;width:5px;height:5px;border-radius:50%;background:var(--muted)}
+  .pts b{color:var(--ink);font-weight:600}
+  .act{display:flex;flex-wrap:wrap;align-items:center;gap:8px;max-width:54ch}
+  .why{flex:1 1 260px;display:flex;gap:10px;align-items:flex-start;border:1px solid var(--rule);border-radius:18px;padding:10px 14px;
+    background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02))}
+  .why .tg{flex:0 0 auto;font-family:var(--m);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--black);background:var(--white);border-radius:999px;padding:3px 8px;margin-top:2px}
+  .why p{margin:0;font-size:clamp(14px,3.7vw,16.5px);line-height:1.4;color:var(--ink)}
+  .deep-btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:999px;
+    padding:9px 15px;font-size:13px;font-weight:500;cursor:pointer;transition:background .2s,color .2s,transform .2s}
+  .deep-btn:hover{background:var(--white);color:var(--black);transform:translateY(-1px)}
+  .deep-btn svg{width:12px;height:12px;fill:none}
+  .c{font-family:var(--m);font-size:.64em;vertical-align:super;line-height:0;color:var(--muted);text-decoration:none;margin-left:2px;white-space:nowrap}
+  .c:hover{color:var(--ink);text-decoration:underline}
+  .vis{margin:4px 0 16px;min-width:0}
+  .bub{background:linear-gradient(180deg,#161617 0%,#0D0D0E 100%);border:1px solid var(--rule);border-radius:24px;padding:16px;
+    box-shadow:0 40px 70px -30px rgba(0,0,0,.9),0 0 0 1px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06)}
+  .vis svg.ch{display:block;width:100%;height:auto;max-height:31vh;overflow:visible;fill:#F5F5F3;font-family:var(--f)}
+  .src-line{font-family:var(--m);font-size:10px;color:var(--muted);margin-top:8px;line-height:1.5}
+  .src-line .c{font-size:1em;vertical-align:baseline}
+
+  .st{display:inline-block;font-family:var(--m);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:999px;white-space:nowrap;vertical-align:1px}
+  .st.live{background:var(--white);color:var(--black);border:1px solid var(--white)}
+  .st.appr{border:1.5px solid var(--white);color:var(--ink)}
+  .st.prop{border:1px dashed var(--mid);color:var(--mid)}
+  .st.spec{border:1px dotted var(--muted);color:var(--muted)}
+  .legend{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+  .meta{display:flex;flex-wrap:wrap;gap:6px;max-width:560px}
+  .meta span{font-family:var(--m);font-size:11px;color:var(--mid);border:1px solid var(--rule);border-radius:999px;padding:5px 10px;background:rgba(255,255,255,.03)}
+  .meta b{color:var(--ink);font-weight:500}
+
+  /* thesis bubbles */
+  .legs-wrap{perspective:1000px}
+  .legs{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;transform:rotateX(10deg);transform-style:preserve-3d;transform-origin:50% 100%}
+  .leg{border:1px solid var(--rule);border-radius:20px;padding:11px 14px;background:linear-gradient(180deg,#19191A,#101011);
+    box-shadow:0 18px 30px -12px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.06);min-width:0;display:grid;grid-template-columns:28px minmax(0,1fr);gap:0 10px;align-items:start}
+  .leg .n{grid-row:span 2;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-family:var(--m);font-size:12px}
+  .leg b{font-size:15px;font-weight:600;letter-spacing:-.01em}
+  .leg span{font-size:12.5px;color:var(--mid);line-height:1.35;margin-top:2px}
+  .leg.trig{background:var(--white);color:var(--black);border-color:var(--white);transform:translateZ(30px);box-shadow:0 26px 40px -10px rgba(0,0,0,.9),0 0 40px rgba(255,255,255,.08)}
+  .leg.trig .n{border-color:rgba(0,0,0,.25)} .leg.trig span{color:#3A3A3B} .leg.trig .c{color:#3A3A3B}
+  @keyframes fl{0%,100%{translate:0 0}50%{translate:0 -5px}}
+  .slide.in .leg{animation:fl 6s ease-in-out infinite} .slide.in .leg:nth-child(2){animation-delay:-2s} .slide.in .leg:nth-child(3){animation-delay:-4s}
+
+  /* orbit system */
+  .sys{position:relative;height:210px;perspective:900px;perspective-origin:50% 30%;overflow:hidden}
+  .sys:before{content:"";position:absolute;left:50%;top:50%;width:220px;height:220px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.14) 0%,rgba(255,255,255,0) 65%);pointer-events:none}
+  .plane{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;transform:rotateX(68deg)}
+  .orbit{position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.16);transform-style:preserve-3d;animation:spin var(--d) linear infinite;animation-delay:var(--o,0s)}
+  .o1{--r:78px;--d:46s;--o:-11.5s} .o2{--r:112px;--d:70s;--o:-30s} .o3{--r:148px;--d:96s;--o:-60s}
+  .orbit{width:calc(var(--r)*2);height:calc(var(--r)*2);left:calc(var(--r)*-1);top:calc(var(--r)*-1)}
+  .pl{position:absolute;left:50%;transform-style:preserve-3d}
+  .pl.t{top:0} .pl.b{top:100%}
+  .face{position:absolute;left:0;top:0;transform-style:preserve-3d;animation:counter var(--d) linear infinite;animation-delay:var(--o,0s)}
+  .face>div{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:4px;white-space:nowrap}
+  .ball{border-radius:50%;background:radial-gradient(circle at 34% 30%,#E9E9E6 0%,#9A9A97 45%,#3E3E3C 100%);box-shadow:0 8px 18px rgba(0,0,0,.7)}
+  .ball.s{width:22px;height:22px} .ball.m{width:28px;height:28px}
+  .ball.w{background:radial-gradient(circle at 34% 30%,#FFFFFF 0%,#D9D9D6 50%,#7A7A77 100%)}
+  .face span{font-size:10.5px;font-weight:600;color:var(--ink);background:rgba(7,7,7,.72);padding:1px 6px;border-radius:999px;border:1px solid var(--rule)}
+  .sun{position:absolute;left:0;top:0;transform-style:preserve-3d;transform:rotateX(-68deg)}
+  .sun>div{position:absolute;width:84px;height:84px;transform:translate(-50%,-50%);border-radius:50%;
+    background:radial-gradient(circle at 36% 30%,#FFFFFF 0%,#E4E4E1 38%,#8E8E8B 80%,#4A4A48 100%);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--black)}
+  .sun b{font-size:22px;font-weight:700;letter-spacing:-.03em;line-height:1}
+  .sun small{font-family:var(--m);font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;margin-top:3px;color:#2E2E2D}
+  @keyframes spin{from{transform:rotateZ(0deg)}to{transform:rotateZ(360deg)}}
+  @keyframes counter{from{transform:rotateZ(0deg) rotateX(-68deg)}to{transform:rotateZ(-360deg) rotateX(-68deg)}}
+  .keys{display:grid;gap:6px;margin-top:6px}
+  .key{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px;align-items:start;font-size:12px;color:var(--mid);line-height:1.35}
+  .key b{color:var(--ink);font-weight:600}
+  .key i{display:block;border-radius:50%;margin-top:2px}
+  .key i.k1{width:12px;height:12px;background:radial-gradient(circle at 36% 30%,#fff,#9A9A97)}
+  .key i.k2{width:10px;height:10px;margin-left:1px;background:radial-gradient(circle at 34% 30%,#E9E9E6,#3E3E3C)}
+  .key i.k3{width:6px;height:6px;margin:4px 3px 0;background:#A3A3A0}
+
+  /* checklist rows */
+  .rows{display:grid;gap:7px}
+  .row{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:1px 10px;align-items:center;border:1px solid var(--rule);border-radius:18px;
+    padding:7px 12px;background:linear-gradient(180deg,#171718,#0F0F10);box-shadow:0 14px 24px -12px rgba(0,0,0,.85)}
+  .row .t{font-size:14px;line-height:1.3;font-weight:500}
+  .row .k{grid-column:2 / 4;font-size:11.5px;color:var(--muted);line-height:1.3}
+  .row em{font-style:normal;font-family:var(--m);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mid)}
+  .dot{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--white)}
+  .dot.full{background:var(--white)} .dot.half{background:linear-gradient(90deg,var(--white) 50%,transparent 50%)} .dot.none{border-style:dashed;border-color:var(--mid)}
+
+  /* rerate stairs */
+  .stairs-wrap{perspective:1000px}
+  .stairs{display:grid;gap:8px;transform-style:preserve-3d}
+  .stg{border-radius:20px;padding:11px 14px;min-width:0;transform:translateX(calc(var(--i) * 14px)) rotateY(-9deg);margin-right:calc(var(--i) * 14px);box-shadow:0 18px 30px -12px rgba(0,0,0,.85)}
+  .stg .h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:3px}
+  .stg b{font-size:15px;font-weight:600;letter-spacing:-.01em}
+  .stg p{margin:0;font-size:12.5px;line-height:1.35}
+  .stg.s1{background:var(--white);color:var(--black)} .stg.s1 p{color:#3A3A3B} .stg.s1 .c{color:#3A3A3B} .stg.s1 .st.live{background:var(--black);color:var(--white);border-color:var(--black)}
+  .stg.s2{border:1.5px solid var(--white);background:linear-gradient(180deg,#19191A,#101011)} .stg.s2 p{color:var(--mid)}
+  .stg.s3{border:1.5px dashed rgba(255,255,255,.3);background:linear-gradient(180deg,#141415,#0D0D0E)} .stg.s3 p{color:var(--mid)}
+  .chipsrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .chipsrow span{font-family:var(--m);font-size:11px;border:1px solid var(--rule);border-radius:999px;padding:4px 10px;color:var(--mid);background:rgba(255,255,255,.03)}
+  .chipsrow b{color:var(--ink);font-weight:500}
+
+  .mech{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 0}
+  .mech span.m{font-size:12px;color:var(--mid);display:inline-flex;gap:6px;align-items:center;border:1px solid var(--rule);border-radius:999px;padding:4px 10px 4px 5px;background:rgba(255,255,255,.03)}
+
+  .tiles-wrap{perspective:1000px}
+  .tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;transform:rotateX(12deg);transform-style:preserve-3d;transform-origin:50% 100%}
+  .tile{border:1px solid var(--rule);border-radius:18px;padding:9px 11px;background:linear-gradient(180deg,#19191A,#101011);
+    box-shadow:0 16px 26px -12px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.05);min-width:0}
+  .tile b{display:block;font-size:13.5px;font-weight:600}
+  .tile span{display:block;font-size:11.5px;color:var(--mid);line-height:1.3;margin-top:2px}
+  .tile.key1{background:var(--white);color:var(--black);border-color:var(--white);transform:translateZ(26px)}
+  .tile.key1 span{color:#3A3A3B} .tile.key1 .c{color:#3A3A3B}
+
+  .obj{display:grid;gap:7px}
+  .ob{border:1px solid var(--rule);border-radius:18px;padding:9px 13px;background:linear-gradient(180deg,#171718,#0F0F10);box-shadow:0 14px 24px -12px rgba(0,0,0,.85);min-width:0}
+  .ob .say{display:flex;gap:8px;align-items:baseline;font-size:12.5px;color:var(--muted);line-height:1.35}
+  .ob .say em{font-style:normal;font-family:var(--m);font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px dashed var(--mid);color:var(--mid);border-radius:999px;padding:1px 6px;flex:0 0 auto}
+  .ob .ans{display:block;font-size:13.5px;color:var(--ink);line-height:1.35;margin-top:4px;font-weight:500}
+  .ob.k{background:var(--white);border-color:var(--white)} .ob.k .say{color:#3A3A3B} .ob.k .say em{border-color:#3A3A3B;color:#3A3A3B} .ob.k .ans{color:var(--black)} .ob.k .c{color:#3A3A3B}
+  .srcs{list-style:none;margin:0;padding:0;columns:1;column-gap:28px}
+  .srcs li{break-inside:avoid;font-size:12.5px;line-height:1.4;color:var(--mid);padding:5px 0 5px 28px;position:relative;border-bottom:1px solid var(--rule)}
+  .srcs li .n{position:absolute;left:0;top:5px;font-family:var(--m);font-size:11px;color:var(--ink)}
+  .srcs a{color:var(--ink);text-decoration:underline;text-decoration-color:rgba(255,255,255,.2);text-underline-offset:2px}
+  .srcs .dt{font-family:var(--m);font-size:10.5px;color:var(--muted)}
+
+  .js .r{opacity:0;transform:translate3d(0,40px,-160px) rotateX(10deg);filter:blur(5px);transform-origin:50% 100%;
+    transition:opacity .75s cubic-bezier(.16,.84,.24,1),transform .9s cubic-bezier(.16,.84,.24,1),filter .75s ease}
+  .js .slide.in .r{opacity:1;transform:none;filter:none}
+  .js .slide.out .r{opacity:0;transform:translate3d(0,-34px,100px) rotateX(-8deg);filter:blur(5px);transition-duration:.45s,.5s,.45s}
+  .js .slide.in .r:nth-child(2){transition-delay:.06s} .js .slide.in .r:nth-child(3){transition-delay:.12s}
+  .js .slide.in .r:nth-child(4){transition-delay:.18s} .js .slide.in .r:nth-child(5){transition-delay:.24s} .js .slide.in .r:nth-child(6){transition-delay:.3s}
+  .js .slide.out .r:nth-child(n){transition-delay:0s}
+  .js .r.fig{transform:translate3d(0,60px,-260px) rotateX(16deg) scale(.95)}
+  .js .slide.in .r.fig{transform:none}
+  .js .slide.out .r.fig{transform:translate3d(0,-30px,130px) rotateX(-10deg) scale(1.02)}
+  .js .r.hd{transform:translate3d(0,60px,-300px) rotateX(12deg)}
+  .js .slide.in .r.hd{transform:none}
+
+  .top{position:fixed;left:0;right:0;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;
+    padding:calc(14px + env(safe-area-inset-top,0px)) 18px 16px;font-family:var(--m);font-size:10px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--muted);background:linear-gradient(to bottom,var(--bg) 50%,rgba(7,7,7,0));pointer-events:none}
+  .nav{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:30;
+    display:flex;align-items:center;gap:6px;padding:6px;border-radius:999px;background:rgba(24,24,25,.78);
+    -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid var(--rule);box-shadow:0 20px 40px -10px rgba(0,0,0,.8)}
+  .nb{width:38px;height:38px;flex:0 0 38px;border-radius:50%;border:0;background:rgba(255,255,255,.06);display:grid;place-items:center;cursor:pointer;transition:background .2s,color .2s}
+  .nb:hover{background:var(--white);color:var(--black)}
+  .nb svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.6}
+  .nb[disabled]{opacity:.3;cursor:default;background:rgba(255,255,255,.06);color:var(--ink)}
+  .mid{display:flex;flex-direction:column;align-items:center;gap:5px;padding:0 10px;min-width:84px}
+  .count{font-family:var(--m);font-size:11.5px;color:var(--ink)}
+  .bar{width:70px;height:2px;border-radius:2px;background:rgba(255,255,255,.12);position:relative;overflow:hidden}
+  .bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--white);transition:width .3s}
+
+  .ov,.sheet{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.66);display:flex;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+  .ov[hidden],.sheet[hidden]{display:none}
+  .ov-card{margin:auto;width:min(880px,calc(100% - 28px));max-height:calc(100dvh - 40px);overflow:auto;background:#0E0E0F;border:1px solid var(--rule);border-radius:26px;padding:18px}
+  .ov-head,.sh-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .ov-head h3,.sh-head h3{font-size:16px;margin:0;font-weight:600;letter-spacing:-.01em}
+  .ov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+  .ov-grid button{text-align:left;border:1px solid var(--rule);background:linear-gradient(180deg,#19191A,#111112);border-radius:18px;padding:11px 13px;cursor:pointer;min-height:62px}
+  .ov-grid button:hover,.ov-grid button[aria-current="true"]{background:var(--white);color:var(--black)}
+  .ov-grid .n{display:block;font-family:var(--m);font-size:10px;opacity:.6;margin-bottom:3px}
+  .ov-grid .t{display:block;font-size:13.5px;line-height:1.3}
+  .x{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:transparent;cursor:pointer;font-size:16px;line-height:1}
+  .sheet{align-items:flex-end;justify-content:center}
+  .sh-card{width:min(740px,100%);max-height:84dvh;overflow:auto;background:#0E0E0F;border:1px solid var(--rule);border-bottom:0;
+    border-radius:28px 28px 0 0;padding:10px 18px calc(24px + env(safe-area-inset-bottom,0px));transition:transform .35s cubic-bezier(.16,.84,.24,1)}
+  .sh-card:before{content:"";display:block;width:40px;height:4px;border-radius:4px;background:rgba(255,255,255,.18);margin:0 auto 12px}
+  .sheet.opening .sh-card{transform:translateY(40px)}
+  .sh-body{font-size:14.5px;line-height:1.55;color:var(--mid)}
+  .sh-body h4{font-size:11px;font-family:var(--m);letter-spacing:.13em;text-transform:uppercase;color:var(--ink);font-weight:500;margin:16px 0 6px}
+  .sh-body h4:first-child{margin-top:0}
+  .sh-body p{margin:0 0 9px} .sh-body ul,.sh-body ol{margin:0 0 9px;padding-left:18px} .sh-body li{margin:3px 0} .sh-body b{color:var(--ink);font-weight:600}
+  .sh-body table{width:100%;border-collapse:collapse;font-size:12.5px;margin:4px 0 10px}
+  .sh-body th,.sh-body td{text-align:left;padding:5px 6px;border-bottom:1px solid var(--rule);vertical-align:top}
+  .sh-body th{font-family:var(--m);font-weight:500;font-size:10px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+  .tbl{overflow-x:auto}
+  .deep{display:none}
+
+  @media (min-width:620px){
+    .legs{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .srcs{columns:2}
+    .sys{height:280px}
+    .o1{--r:105px} .o2{--r:150px} .o3{--r:200px}
+  }
+  @media (min-width:980px){
+    .slide{padding:76px 52px 104px}
+    .inner{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);column-gap:64px;align-items:center;grid-template-areas:"q v" "h v" "p v" "a v"}
+    .inner>.q{grid-area:q;align-self:end} .inner>h2{grid-area:h} .inner>.vis{grid-area:v;margin:0}
+    .inner>.pts{grid-area:p} .inner>.act{grid-area:a;align-self:start}
+    .inner.solo{grid-template-columns:minmax(0,1fr);grid-template-areas:none} .inner.solo>*{grid-area:auto}
+    .vis svg.ch{max-height:52vh}
+    .js .slide.in .r.fig.bub{transform:rotateY(-7deg) rotateX(4deg)}
+    .js .slide.in .r.fig.bub:hover{transform:rotateY(0) rotateX(0)}
+    .sys{height:380px}
+    .o1{--r:130px} .o2{--r:185px} .o3{--r:245px}
+    .sun>div{width:104px;height:104px}
+  }
+  @media (max-width:979px){
+    .slide{padding:54px 16px 90px}
+    .bub{padding:13px;border-radius:22px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto} .deck{perspective:none}
+    html.js .r, html.js .r.fig, html.js .r.hd, html.js .slide.out .r, html.js .slide.out .r.fig, html.js .slide.in .r.fig.bub{opacity:1;transform:none;filter:none;transition:none}
+    .slide.in .leg{animation:none}
+    .orbit,.face{animation-play-state:paused}
+    .sh-card{transition:none}
+  }
+</style>
+
+<div class="top" aria-hidden="true"><span>ENA · Thesis</span><span>Oct 19, 2026</span></div>
+
+<main class="deck" id="deck">
+
+<!-- 0 -->
+<section class="slide" data-title="Cover">
+  <div class="inner solo">
+    <p class="q">Ethena · ENA · our thesis</p>
+    <h1>The Heliocentric<br><span class="dim">trade.</span></h1>
+    <p class="sub">A fixed-supply token at the center of a growing set of regulated dollar businesses. The pipe back to the token is built. This is why ENA can rerate.</p>
+    <div class="meta">
+      <span><b>ENA ~$0.19</b> Oct 18<a class="c" data-s="34"></a></span>
+      <span><b>USDe $4.74B</b> Oct 18<a class="c" data-s="35"></a></span>
+    </div>
+    <div class="legend"><span class="st live">Live</span><span class="st appr">Approved</span><span class="st prop">Planned / proposed</span><span class="st spec">Speculation</span></div>
+    <p class="src-line">Swipe up or use ↑ ↓ · “Go deeper” for detail · Not investment advice</p>
+  </div>
+</section>
+
+<!-- 1 -->
+<section class="slide" data-title="The thesis">
+  <div class="inner">
+    <p class="q">01 · The thesis</p>
+    <h2>ENA is becoming the network asset at the center of a regulated dollar business.</h2>
+    <div class="vis legs-wrap">
+      <div class="legs">
+        <div class="leg"><span class="n">1</span><b>The pipe is built</b><span>Fee switch approved: 95% of the Foundation's cut buys ENA.<a class="c" data-s="5"></a></span></div>
+        <div class="leg"><span class="n">2</span><b>The overhang is gone</b><span>Investor vesting ended Oct 5. 89% of supply circulates.<a class="c" data-s="5"></a><a class="c" data-s="1"></a></span></div>
+        <div class="leg"><span class="n">3</span><b>The dollar is going mainstream</b><span>White-label dollars, payments, Janus Henderson, stock basis trades.<a class="c" data-s="11"></a><a class="c" data-s="15"></a><a class="c" data-s="10"></a></span></div>
+        <div class="leg trig"><span class="n">→</span><b>Trigger: USDe ≥ $7.5B</b><span>$4.74B today, +58% to go. Then buybacks print.<a class="c" data-s="35"></a></span></div>
+      </div>
+    </div>
+    <ul class="pts">
+      <li>Once buybacks run, ENA gets priced on <b>cash flow instead of narrative</b>. That's the rerate. Tokenization is what lets the cash flow scale.</li>
+    </ul>
+    <div class="act"><div class="why"><span class="tg">Thesis</span><p>Scarcity at the core. Productive businesses around it. The trigger is one number: USDe supply.</p></div><button class="deep-btn" type="button">Go deeper <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button></div>
+  </div>
+  <div class="deep">
+    <h4>What we're claiming</h4>
+    <p>Ethena's dollar business already earns real money: $1.06B in lifetime fees and ~$245M over the last year.<a class="c" data-s="3"></a> Until September none of that reached ENA. The Aug 27 package changed the structure: sellers bought out, investor unlocks ended in one release, a fee switch approved, and IP and residual value proposed to move to the Foundation.<a class="c" data-s="6"></a></p>
+    <h4>What has to happen</h4>
+    <p>USDe has to grow from $4.74B to $7.5B for the buyback to switch on, and keep going to $15B+ for buybacks to matter. That's the bet.<a class="c" data-s="11"></a><a class="c" data-s="5"></a> For scale, the Foundation's stated ambition is more than $100B of USDe within five years.<a class="c" data-s="21"></a> <span class="st spec">Target</span></p>
+    <h4>What we're not claiming</h4>
+    <p>That buybacks alone justify the price. At the first tier they're small (~$22.5M a year). The rerate comes from the market changing <i>how</i> it values ENA once the pipe is live.<a class="c" data-s="5"></a></p>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="slide" data-title="The heliocentric model">
+  <div class="inner">
+    <p class="q">02 · The model</p>
+    <h2>ENA is the sun. Businesses orbit it. Their activity feeds back to it.</h2>
+    <div class="vis">
+      <div class="sys" role="img" aria-label="Animated model: ENA at the center as the network asset. Orbiting it: Ethena Labs and Ethena Pay on the inner orbit, StablecoinX on the middle orbit, white-label partners on the outer orbit.">
+        <div class="plane">
+          <div class="orbit o3"><div class="pl t"><div class="face"><div><i class="ball m"></i><span>White-label</span></div></div></div></div>
+          <div class="orbit o2"><div class="pl t"><div class="face"><div><i class="ball m w"></i><span>StablecoinX</span></div></div></div></div>
+          <div class="orbit o1"><div class="pl t"><div class="face"><div><i class="ball s"></i><span>Ethena Labs</span></div></div></div><div class="pl b"><div class="face"><div><i class="ball s"></i><span>Ethena Pay</span></div></div></div></div>
+          <div class="sun"><div><b>ENA</b><small>network asset</small></div></div>
+        </div>
+      </div>
+      <div class="keys">
+        <div class="key"><i class="k1"></i><span><b>Sun · network value:</b> ENA</span></div>
+        <div class="key"><i class="k2"></i><span><b>Planets · enterprise value:</b> StablecoinX, Ethena Labs, Ethena Pay, white-label partners</span></div>
+        <div class="key"><i class="k3"></i><span><b>Moons · real-world links:</b> Janus, Aladdin, FalconX, Coinbase, Robinhood, Binance</span></div>
+      </div>
+    </div>
+    <ul class="pts">
+      <li><b>Network asset</b> = scarcity at the core. <b>Enterprise equity</b> = elasticity at the edge: companies raise money, sign licenses and carry the regulation.</li>
+    </ul>
+    <div class="act"><div class="why"><span class="tg">For ENA</span><p>The more businesses build on Ethena's dollars, the more fees flow toward the token.</p></div><button class="deep-btn" type="button">Go deeper <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button></div>
+  </div>
+  <div class="deep">
+    <h4>The template</h4>
+    <p>Hyperliquid is the template: HYPE is the network asset at the center; Trade[XYZ] is an equity company in orbit that holds licenses (like the S&amp;P 500 deal) while its markets run on the network; its real-world relationships are moons. Fees route back to the network through automated HYPE purchases.</p>
+    <h4>Why it fits Ethena</h4>
+    <ul>
+      <li><b>The sun:</b> ENA, 15B max supply, with an approved fee switch and the proposed transfer of IP and residual value to the Foundation.<a class="c" data-s="4"></a><a class="c" data-s="5"></a><a class="c" data-s="6"></a></li>
+      <li><b>Planets:</b> StablecoinX (Nasdaq-listed, holds ~20% of ENA)<a class="c" data-s="13"></a>; Ethena Labs, the operator; Ethena Pay<a class="c" data-s="14"></a>; and white-label partners who brand their own dollars on Ethena's stack (Jupiter, MegaETH, ether.fi USD announced Oct 6).<a class="c" data-s="11"></a></li>
+      <li><b>Moons:</b> Janus Henderson (ENA position, USDe cash management)<a class="c" data-s="15"></a>, the Aladdin integration, Coinbase and Robinhood channels<a class="c" data-s="13"></a>, FalconX $1B facility<a class="c" data-s="16"></a>, Binance stock basis<a class="c" data-s="10"></a>, Anchorage issuing USDtb.<a class="c" data-s="4"></a></li>
+    </ul>
+    <h4>Two kinds of capital</h4>
+    <p>Funds that can't hold tokens can buy the equity that holds them. StablecoinX (Nasdaq: USDE) listed June 26, 2026 and holds ~3.0B ENA, about 20% of supply.<a class="c" data-s="13"></a> The proposed framework agreement assigns Ethena's IP and residual value to the Foundation, not Labs shareholders, so value concentrates in the token.<a class="c" data-s="6"></a> <span class="st prop">Proposed</span></p>
+    <p>At ~$0.19, StablecoinX's ENA is worth ~$570M, against a market cap reported near $300M at its September high: roughly half of NAV.<a class="c" data-s="39"></a> Its ENA is locked up and it carries equity and dilution risk, so the discount can persist. Read it as sentiment, not a free lunch.</p>
+    <p><b>Caveat:</b> this mapping is our interpretation. Orbit sizes don't represent valuations. "Commit &amp; compound" is not an announced StablecoinX policy.<a class="c" data-s="13"></a></p>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="slide" data-title="The pipe">
+  <div class="inner">
+    <p class="q">03 · Value accrual</p>
+    <h2>The pipe is built. The money starts flowing at $7.5B.</h2>
+    <div class="vis bub">
+      <svg class="ch" viewBox="0 0 300 128" role="img" aria-label="Fee switch ladder: 5 percent of gross revenue at 7.5 billion USDe, 10 percent at 10 billion, 15 percent at 15 billion. Today's 4.74 billion needs 58 percent growth to reach the first step.">
+        <defs><marker id="a8" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L6 3L0 6z" fill="#A3A3A0"/></marker></defs>
+        <text x="0" y="10" font-size="7.5" fill="#6B6B68">Foundation's cut of gross revenue, by USDe supply</text>
+        <path d="M112.5 100L112.5 80L150 80L150 60L225 60L225 40L285 40L285 100Z" fill="#1C1C1D"/>
+        <path d="M0 100L112.5 100L112.5 80L150 80L150 60L225 60L225 40L285 40" stroke="#F5F5F3" stroke-width="2" fill="none" stroke-linejoin="round"/>
+        <path d="M285 40L300 40" stroke="#F5F5F3" stroke-width="2" stroke-dasharray="3 3" fill="none"/>
+        <line x1="0" y1="100" x2="300" y2="100" stroke="#3A3A3B"/>
+        <text x="131.25" y="75" font-size="10" font-weight="700" text-anchor="middle">5%</text>
+        <text x="187.5" y="55" font-size="10" font-weight="700" text-anchor="middle">10%</text>
+        <text x="255" y="35" font-size="10" font-weight="700" text-anchor="middle">15%</text>
+        <line x1="72" y1="100" x2="72" y2="58" stroke="#A3A3A0" stroke-dasharray="2 2"/>
+        <text x="72" y="53" font-size="9" font-weight="700" text-anchor="middle">Today</text>
+        <path d="M76 92L107 92" stroke="#A3A3A0" stroke-width="1.2" marker-end="url(#a8)"/>
+        <text x="92" y="88" font-size="8.5" font-weight="700" text-anchor="middle">+58%</text>
+        <text x="72" y="112" font-size="8" font-weight="700" text-anchor="middle">$4.74B</text>
+        <text x="112.5" y="112" font-size="8" fill="#A3A3A0" text-anchor="middle">$7.5B</text>
+        <text x="150" y="112" font-size="8" fill="#A3A3A0" text-anchor="middle">$10B</text>
+        <text x="225" y="112" font-size="8" fill="#A3A3A0" text-anchor="middle">$15B</text>
+        <text x="300" y="124" font-size="7" fill="#6B6B68" text-anchor="end">20% at $20B · 25% at $25B+</text>
+      </svg>
+      <div class="mech">
+        <span class="m"><span class="st appr">Approved</span>Buyback, off until $7.5B</span>
+        <span class="m"><span class="st prop">Proposed</span>IP and value to Foundation</span>
+      </div>
+    </div>
+    <ul class="pts">
+      <li>Today: ~$245M a year in fees, <b>$0 to ENA</b>. Above $7.5B, 5% of gross goes to the Foundation, rising to 25%, and 95% of it buys ENA.<a class="c" data-s="3"></a><a class="c" data-s="5"></a></li>
+      <li>White-label and savings revenue are in the pipe too, so partner growth feeds buybacks.<a class="c" data-s="5"></a><a class="c" data-s="6"></a></li>
+    </ul>
+    <div class="act"><div class="why"><span class="tg">For ENA</span><p>Every new chain, neobank or fund holding USDe now moves ENA closer to buybacks.</p></div><button class="deep-btn" type="button">Go deeper <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button></div>
+  </div>
+  <div class="deep">
+    <h4>The ladder (Ethena's illustration, 6% return)<a class="c" data-s="5"></a></h4>
+    <div class="tbl"><table><tr><th>USDe</th><th>Gross revenue</th><th>Cut</th><th>Take / yr</th></tr>
+      <tr><td>$7.5B</td><td>$450M</td><td>5%</td><td>$22.5M</td></tr><tr><td>$10B</td><td>$600M</td><td>10%</td><td>$60M</td></tr>
+      <tr><td>$15B</td><td>$900M</td><td>15%</td><td>$135M</td></tr><tr><td>$20B</td><td>$1.2B</td><td>20%</td><td>$240M</td></tr></table></div>
+    <p>Vote closed Sept 2: 17.8M ENA for, 0 against. Covers three lines: USDe savings, white-label stablecoins and "Ethena [X]".<a class="c" data-s="5"></a><a class="c" data-s="6"></a></p>
+    <h4>Open questions</h4>
+    <ul><li>How the milestone is measured isn't in the voted text; the 14-day average is a forum recommendation.<a class="c" data-s="5"></a></li><li>"Net revenue" isn't defined.<a class="c" data-s="5"></a></li></ul>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="slide" data-title="Graduating to the upper K">
+  <div class="inner">
+    <p class="q">04 · Graduation</p>
+    <h2>ENA is graduating from the bottom K to the upper K.</h2>
+    <div class="vis rows">
+      <div class="row"><i class="dot full"></i><span class="t">Real revenue</span><em>done</em><span class="k">$1.06B lifetime fees<a class="c" data-s="3"></a></span></div>
+      <div class="row"><i class="dot full"></i><span class="t">Clean float</span><em>done</em><span class="k">Investor vesting done; zero USDe token incentives going forward<a class="c" data-s="5"></a><a class="c" data-s="25"></a></span></div>
+      <div class="row"><i class="dot full"></i><span class="t">Founders fixed the token</span><em>done</em><span class="k">Buyout, fee switch, IP to Foundation, SOC 2<a class="c" data-s="6"></a><a class="c" data-s="27"></a></span></div>
+      <div class="row"><i class="dot half"></i><span class="t">Value accrual live</span><em>pending</em><span class="k">Approved; switches on at $7.5B<a class="c" data-s="5"></a></span></div>
+      <div class="row"><i class="dot half"></i><span class="t">Non-cyclical revenue</span><em>building</em><span class="k">Credit, lending, stock basis growing<a class="c" data-s="10"></a><a class="c" data-s="16"></a></span></div>
+      <div class="row"><i class="dot half"></i><span class="t">Hockey-stick growth</span><em>starting</em><span class="k">+$700M in Sept, unsubsidized; +58% to go<a class="c" data-s="25"></a><a class="c" data-s="31"></a></span></div>
+    </div>
+    <ul class="pts">
+      <li>The loop: investors demand more → founders fix the token → the market rewards it → others copy. ENA is <b>still up ~25% since the Sept 2 vote</b>.<a class="c" data-s="5"></a><a class="c" data-s="34"></a></li>
+    </ul>
+    <div class="act"><div class="why"><span class="tg">For ENA</span><p>The biggest returns come from tokens graduating into the upper K, not the ones already there.</p></div><button class="deep-btn" type="button">Go deeper <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button></div>
+  </div>
+  <div class="deep">
+    <h4>The upper-K frame</h4>
+    <p>Over a long enough timeframe, investors tend to lose money in the "bottom K" (no value accrual, unlock overhang), make some money in the "upper K" (real revenue, aligned tokens), and make the most in tokens graduating into it. Market participants are converging on what "quality" means, and marginal capital is flowing to strong teams with real revenue.</p>
+    <h4>Why ENA fits "graduating"</h4>
+    <ul><li>Price marked $0.1516 on Sept 2<a class="c" data-s="5"></a>; ~$0.19 on Oct 14, about +25% (it peaked near $0.30 in early October).<a class="c" data-s="34"></a></li><li>Still ~87% below its $1.52 high.<a class="c" data-s="1"></a></li><li>The remaining gaps (buybacks live, steadier revenue, growth) are the ones that would complete the move.</li></ul>
+    <h4>Caveat</h4>
+    <p>The investor loop and upper-K framing come from market commentary, not data. They describe a pattern, not a guarantee.</p>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="slide" data-title="Steadier revenue">
+  <div class="inner">
+    <p class="q">05 · Revenue quality</p>
+    <h2>Ethena is shifting from crypto funding toward steadier income.</h2>
+    <div class="vis bub">
+      <svg class="ch" viewBox="0 0 300 140" role="img" aria-label="Backing mix: early 2025 more than 80 percent crypto perp basis. September 2026 roughly 35 percent DeFi lending, 27 percent liquid stablecoins, 20 percent crypto basis, 12 percent institutional lending and 6 percent real-world assets. Blended yield 5.2 percent. Added since mid-2026: AAA CLO funds, FalconX loans, stock basis trades.">
+        <text x="0" y="10" font-size="8" fill="#A3A3A0">Early 2025</text>
+        <rect x="0" y="14" width="240" height="20" rx="3" fill="#F5F5F3"/><text x="6" y="27.5" font-size="8.5" font-weight="600" fill="#070707">Crypto perp basis &gt;80%</text>
+        <rect x="240" y="14" width="60" height="20" fill="#3A3A3B"/><text x="246" y="27.5" font-size="8" fill="#A3A3A0">other</text>
+        <text x="0" y="52" font-size="8" fill="#A3A3A0">Sept 2026 · blended yield 5.2%</text>
+        <rect x="0" y="56" width="105" height="20" fill="#8A8A87"/><text x="5" y="69.5" font-size="8" fill="#070707">DeFi lending ~35%</text>
+        <rect x="105" y="56" width="81" height="20" fill="#5E5E5C"/><text x="110" y="69.5" font-size="8">Stables ~27%</text>
+        <rect x="186" y="56" width="60" height="20" fill="#F5F5F3"/><text x="191" y="69.5" font-size="8" fill="#070707">Basis ~20%</text>
+        <rect x="246" y="56" width="36" height="20" fill="#3A3A3B"/><text x="250" y="69.5" font-size="8">~12%</text>
+        <rect x="282" y="56" width="18" height="20" fill="#A3A3A0"/>
+        <text x="298" y="87" font-size="7" fill="#A3A3A0" text-anchor="end">~12% inst. lending · ~6% RWA</text>
+        <text x="0" y="104" font-size="8" fill="#A3A3A0">Added since mid-2026</text>
+        <rect x="0.5" y="110.5" width="91" height="18" rx="9" fill="#1A1A1B" stroke="#4A4A48"/><text x="46" y="122.5" font-size="8" text-anchor="middle">AAA CLO funds</text>
+        <rect x="100.5" y="110.5" width="95" height="18" rx="9" fill="#1A1A1B" stroke="#4A4A48"/><text x="148" y="122.5" font-size="8" text-anchor="middle">FalconX $1B loans</text>
+        <rect x="204.5" y="110.5" width="95" height="18" rx="9" fill="#1A1A1B" stroke="#4A4A48"/><text x="252" y="122.5" font-size="8" text-anchor="middle">Stock basis trades</text>
+        <text x="0" y="138" font-size="7" fill="#6B6B68">Sept 2026 shares approximate, read from a Sept 30 bank research chart.</text>
+      </svg>
+      <p class="src-line">Mix<a class="c" data-s="7"></a><a class="c" data-s="27"></a> · CLOs<a class="c" data-s="15"></a> · FalconX<a class="c" data-s="16"></a> · stock basis<a class="c" data-s="10"></a></p>
+    </div>
+    <ul class="pts">
+      <li>In early 2025, more than 80% of backing sat in crypto perp trades. Now about <b>80% sits outside crypto basis</b>: DeFi and institutional lending, liquid stablecoins and RWAs. Blended yield 5.2%, against 7% on average since launch.<a class="c" data-s="7"></a><a class="c" data-s="27"></a></li>
+      <li>The trade-off: steadier income, lower peak yield. <b>Non-cyclical revenue is what the upper K pays for.</b></li>
+    </ul>
+    <div class="act"><div class="why"><span class="tg">For ENA</span><p>Less cyclical income means buyback cash that can survive a bear market.</p></div><button class="deep-btn" type="button">Go deeper <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button></div>
+  </div>
+  <div class="deep">
+    <h4>New income streams</h4>
+    <ul>
+      <li><b>Stock basis:</b> long tokenized US stocks, short equity perps on Binance. Equity-perp OI is above $2.9B and has grown at a 105% compound monthly rate this year. Equity basis averaged 3.56% annualized over six months.<a class="c" data-s="10"></a> <span class="st live">Live</span></li>
+      <li><b>Credit:</b> Janus Henderson's AAA CLO strategy added to backing<a class="c" data-s="15"></a>; the real-world-asset sleeve (JAAA, STAC) was ~$500M by June 17, 2026.<a class="c" data-s="7"></a></li>
+      <li><b>Institutional lending:</b> the $1B FalconX facility, collateral at qualified custodians.<a class="c" data-s="16"></a></li>
+    </ul>
+    <h4>Why non-crypto-native revenue matters</h4>
+    <p>The strongest revenue story is income that doesn't depend on crypto leverage, scales fast and isn't tied to the cycle. Equity basis and credit move Ethena in that direction.</p>
+    <h4>Caveat</h4>
+    <p>Steadier income has so far meant lower yield: sUSDe at 4.87% vs a 4.16% T-bill.<a class="c" data-s="18"></a><a class="c" data-s="17"></a> Gross revenue fell from $151M (Q3 2025) to $65M (Q1 2026).<a class="c" data-s="7"></a></p>
+  </div>
+</section>
+
+<!-- 8 new: trigger clock -->
+<section class="slide" data-title="The trigger clock">
+  <div class="inner">
+    <p class="q">06 · The trigger clock</p>
+    <h2>At today's run-rate, buybacks switch on in months, not years.</h2>
+    <div class="vis bub">
+      <svg class="ch" viewBox="0 0 300 150" role="img" aria-label="Months for USDe to grow from 4.74 billion to 7.5 billion at different growth rates: about late December 2026 at 40 million dollars a day, about late January 2027 at 30 million a day, about mid-March 2027 at the last 30 days' pace of 19 million a day. If supply stalls, the trigger never arrives.">
+        <text x="0" y="9" font-size="7.5" fill="#6B6B68">Days to $7.5B from $4.74B (Oct 19), by daily net growth</text>
+        <g font-size="7" fill="#6B6B68" text-anchor="middle"><text x="88" y="22">Oct</text><text x="118" y="22">Nov</text><text x="148" y="22">Dec</text><text x="178" y="22">Jan</text><text x="208" y="22">Feb</text><text x="238" y="22">Mar</text><text x="268" y="22">Apr</text></g>
+        <g stroke="#262627"><line x1="88" y1="27" x2="88" y2="124"/><line x1="148" y1="27" x2="148" y2="124"/><line x1="208" y1="27" x2="208" y2="124"/><line x1="268" y1="27" x2="268" y2="124"/></g>
+        <g font-size="8.5" font-weight="600"><text x="0" y="43">$40M / day</text><text x="0" y="68">$30M / day</text><text x="0" y="93">$19M / day</text><text x="0" y="118">Stalls</text></g>
+        <g font-size="6.5" fill="#A3A3A0"><text x="0" y="51">top of quoted range</text><text x="0" y="76">middle of range</text><text x="0" y="101">last 30 days</text></g>
+        <rect x="88" y="36" width="69" height="10" rx="5" fill="#F5F5F3"/><text x="161" y="44" font-size="8" font-weight="700">late Dec</text>
+        <rect x="88" y="61" width="92" height="10" rx="5" fill="#A3A3A0"/><text x="184" y="69" font-size="8" font-weight="700">late Jan</text>
+        <rect x="88" y="86" width="145" height="10" rx="5" fill="#5E5E5C"/><text x="237" y="94" font-size="8" font-weight="700">mid-Mar</text>
+        <rect x="88.5" y="110.5" width="207" height="10" rx="5" fill="none" stroke="#6B6B68" stroke-dasharray="3 2"/><text x="192" y="118.3" font-size="6.5" fill="#A3A3A0" text-anchor="middle">no trigger</text>
+        <text x="0" y="141" font-size="7" fill="#6B6B68">Linear growth. The trigger uses a 14-day average, so add ~1 week.</text>
+      </svg>
+      <p class="src-line">Supply and 30-day change<a class="c" data-s="35"></a> · run-rate claim<a class="c" data-s="36"></a> · trigger rule<a class="c" data-s="11"></a></p>
+    </div>
+    <ul class="pts">
+      <li>USDe grew <b>~$570M in the last 30 days, mostly after token incentives ended</b>. That's the answer to "growth was only bribed."<a class="c" data-s="35"></a><a class="c" data-s="31"></a></li>
+      <li>One catalyst nearly closes the gap: <b>~$90B of USDT sits on TRON</b>, where USDe just launched. 3% of it is ~$2.7B.<a class="c" data-s="37"></a><a class="c" data-s="26"></a></li>
+    </ul>
+    <div class="act"><div class="why"><span class="tg">Watch</span><p>If the 30-day pace holds above ~$500M, the first buyback lands by spring 2027.</p></div><button class="deep-btn" type="button">Go deeper <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button></div>
+  </div>
+  <div class="deep">
+    <h4>The math</h4>
+    <p>Gap: $7.5B − $4.74B = $2.76B.<a class="c" data-s="35"></a> At $40M/day: ~69 days. At $30M/day: ~92 days. At the last 30 days' ~$19M/day: ~145 days. Compounding at the last 30 days' 13.7% gets there in ~3.6 months. The fee switch measures a 14-day average, so the switch flips about a week after the spot number crosses.<a class="c" data-s="11"></a></p>
+    <h4>Catalysts that move the clock</h4>
+    <ul>
+      <li><b>TRON.</b> USDT on TRON passed $90B.<a class="c" data-s="37"></a> Much of it is low-velocity savings, where a yielding dollar beats a non-yielding one. USDe and sUSDe launched there in September.<a class="c" data-s="26"></a> <span class="st live">Live</span></li>
+      <li><b>Robinhood Chain.</b> About $320M of USDe added in two months.<a class="c" data-s="36"></a> <span class="st live">Live</span></li>
+      <li><b>White-label.</b> ether.fi USD ($300M+ of deposits that could convert), Jupiter, MegaETH.<a class="c" data-s="11"></a> <span class="st prop">Launching</span></li>
+      <li><b>Equity perps.</b> Equity-perp open interest passed $6B; Ethena expects equity basis to overtake crypto basis as its main yield source within 12–24 months.<a class="c" data-s="38"></a> A trade.xyz (Hyperliquid) funding partnership is rumored, not confirmed.<a class="c" data-s="36"></a> <span class="st spec">Rumor</span></li>
+      <li><b>Newer chains and DeFi.</b> In the month to Oct 12, USDe grew +62% on Plasma, +41% on Mantle and +14% on Base. It is Morpho's largest dollar collateral, backing two of its three biggest markets.<a class="c" data-s="2"></a><a class="c" data-s="25"></a></li>
+      <li><b>Ethena Pay.</b> Live in 48 countries, but no visible supply uplift yet.<a class="c" data-s="14"></a><a class="c" data-s="36"></a></li>
+    </ul>
+    <h4>Why "we just need one to hit" overstates it</h4>
+    <p>The popular formula P(hit) = 1 − (1−p₁)(1−p₂)…(1−pₙ) assumes the bets are independent. These aren't: TRON demand, Robinhood flows, white-label launches and basis yield all rise and fall with the same crypto risk appetite and funding regime. In a bear market they tend to miss together. And a hit only counts if it is big: a $200M product doesn't move a $2.8B gap. Count the options, but size them.</p>
+    <h4>Pushback on two popular claims</h4>
+    <ul>
+      <li><b>"Funding rates are boosting yield."</b> Not lately: BTC basis on Binance fell to ~1% by September 2026. sUSDe's ~4–5% comes from lending, stablecoins and RWAs.<a class="c" data-s="27"></a></li>
+      <li><b>"The market prices zero value for $10B+."</b> On a strict mature multiple, today's price already assumes USDe near ~$15B (see the rerate slide). The ratchet-ups are partly priced; the upside is beyond $15B.</li>
+    </ul>
+
+  </div>
+</section>
+
+<!-- 8 new: tailwind -->
+<section class="slide" data-title="The tailwind">
+  <div class="inner">
+    <p class="q">07 · The tailwind</p>
+    <h2>Dollars and assets are coming onchain. Ethena sells the yield.</h2>
+    <div class="vis tiles-wrap">
+      <div class="tiles">
+        <div class="tile key1"><b>USDe ≈ 1.6%</b><span>of a $304B stablecoin market<a class="c" data-s="28"></a></span></div>
+        <div class="tile"><b>$304B</b><span>Stablecoins; flat in Q3, peak $320B in May<a class="c" data-s="28"></a></span></div>
+        <div class="tile"><b>5%</b><span>Share of stablecoins that pays yield today<a class="c" data-s="27"></a></span></div>
+        <div class="tile"><b>$50B → $120B+</b><span>Tokenized real-world assets, 2026<a class="c" data-s="29"></a></span></div>
+        <div class="tile"><b>0.15% → 1%+</b><span>Tokenized stocks vs stablecoin supply<a class="c" data-s="29"></a></span></div>
+        <div class="tile"><b>$2T by 2028</b><span>Stablecoin forecast; $4T tokenized assets<a class="c" data-s="27"></a></span></div>
+      </div>
+    </div>
+    <ul class="pts">
+      <li>Tokenization removes Ethena's old ceiling: more T-bills, credit, stocks and commodities onchain means <b>more places to earn yield</b> than the crypto basis trade alone.<a class="c" data-s="27"></a></li>
+      <li>Nasdaq, NYSE and Morgan Stanley have all announced tokenized-stock plans.<a class="c" data-s="29"></a></li>
+    </ul>
+    <div class="act"><div class="why"><span class="tg">For ENA</span><p>Ethena doesn't need to beat Tether. It needs a few percent of a market that keeps growing.</p></div><button class="deep-btn" type="button">Go deeper <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button></div>
+  </div>
+  <div class="deep">
+    <h4>Three layers</h4>
+    <ul>
+      <li><b>Dollars onchain.</b> ~$304B at the end of Q3: USDT ~$184B, USDC ~$75B, USDS ~$6.7B, USDe ~$4.9B (#4).<a class="c" data-s="28"></a></li>
+      <li><b>Dollars that pay.</b> Yield-bearing stablecoins are ~5% of the market; the bank research expects that share to rise as users want yield as well as payments. Ethena is the #2 issuer behind Sky.<a class="c" data-s="27"></a></li>
+      <li><b>Assets to earn on.</b> Tokenized RWAs went from ~$50B to $120B+ this year.<a class="c" data-s="29"></a> The same research sees tokenized assets (stablecoins plus RWAs) rising from ~$350B to $4T by end-2028, and says RWAs and equity and commodity basis add ~$150T of potential collateral to ~$3T of crypto.<a class="c" data-s="27"></a></li>
+    </ul>
+    <h4>Regulation cuts both ways</h4>
+    <p>The GENIUS Act stops US payment-stablecoin issuers from paying yield. That pushes yield-seeking demand toward products built for it, like USDe, but also limits where USDe can be distributed in the US.</p>
+    <h4>Caveat</h4>
+    <p>Stablecoin growth stalled this year: supply went sideways in Q3, and year-over-year growth was single digits.<a class="c" data-s="28"></a> The $2T-by-2028 forecast needs roughly 6× from here; Citi's 2030 base case is $1.9T, bull $4T.<a class="c" data-s="30"></a></p>
+  </div>
+</section>
+
+<!-- 10 new: TAM scenarios -->
+<section class="slide" data-title="The size of the prize">
+  <div class="inner">
+    <p class="q">08 · The size of the prize</p>
+    <h2>If stablecoin adoption keeps growing, ENA has room to run.</h2>
+    <div class="vis bub">
+      <svg class="ch" viewBox="0 0 300 156" role="img" aria-label="Five-year scenarios as price ranges on a log scale from 15 cents to 8 dollars. Slow, USDe 24 billion: 0.66 to 0.88 dollars. Base, USDe 50 billion: 1.37 to 1.83. Executes, USDe 100 billion: 2.74 to 3.65. Cycle peak, 100 billion at froth multiples: 4.38 to 5.48. Today about 19 cents.">
+        <line x1="94.8" y1="129" x2="94.8" y2="135" stroke="#6B6B68"/>
+        <text x="94.8" y="143" font-size="7" fill="#6B6B68" text-anchor="middle">$0.50</text>
+        <line x1="143.6" y1="129" x2="143.6" y2="135" stroke="#6B6B68"/>
+        <text x="143.6" y="143" font-size="7" fill="#6B6B68" text-anchor="middle">$1</text>
+        <line x1="192.4" y1="129" x2="192.4" y2="135" stroke="#6B6B68"/>
+        <text x="192.4" y="143" font-size="7" fill="#6B6B68" text-anchor="middle">$2</text>
+        <line x1="256.9" y1="129" x2="256.9" y2="135" stroke="#6B6B68"/>
+        <text x="256.9" y="143" font-size="7" fill="#6B6B68" text-anchor="middle">$5</text>
+        <line x1="26.6" y1="128" x2="26.6" y2="136" stroke="#F5F5F3" stroke-width="1.2"/>
+        <text x="23.6" y="143" font-size="7" font-weight="700" text-anchor="start">Today $0.19</text>
+        <text x="0" y="25" font-size="9" font-weight="700">Slow</text>
+        <text x="0" y="34" font-size="7" fill="#A3A3A0">USDe $24B</text>
+        <rect x="114.3" y="22" width="20.3" height="8" rx="1.5" fill="#6B6B68"/>
+        <text x="110.3" y="29" font-size="8.5" font-weight="700" text-anchor="end">$0.66–0.88</text>
+        <text x="0" y="55" font-size="9" font-weight="700">Base</text>
+        <text x="0" y="64" font-size="7" fill="#A3A3A0">USDe $50B</text>
+        <rect x="165.7" y="52" width="20.4" height="8" rx="1.5" fill="#A3A3A0"/>
+        <text x="161.7" y="59" font-size="8.5" font-weight="700" text-anchor="end">$1.37–1.83</text>
+        <text x="0" y="85" font-size="9" font-weight="700">Executes</text>
+        <text x="0" y="94" font-size="7" fill="#A3A3A0">USDe $100B</text>
+        <rect x="214.6" y="82" width="20.2" height="8" rx="1.5" fill="#F5F5F3"/>
+        <text x="210.6" y="89" font-size="8.5" font-weight="700" text-anchor="end">$2.74–3.65</text>
+        <text x="0" y="115" font-size="9" font-weight="700">Cycle peak</text>
+        <text x="0" y="124" font-size="7" fill="#A3A3A0">$100B + froth</text>
+        <rect x="247.6" y="112" width="15.8" height="8" rx="1.5" fill="#1C1C1D" stroke="#F5F5F3" stroke-width="1" stroke-dasharray="2.5 1.5"/>
+        <text x="243.6" y="119" font-size="8.5" font-weight="700" text-anchor="end">$4.38–5.48</text>
+        <line x1="10" y1="132" x2="290" y2="132" stroke="#3A3A3B"/>
+        <text x="0" y="154" font-size="7" fill="#6B6B68">~5 years out · log price scale · bars span each range · ~13B tokens</text>
+      </svg>
+      <p class="src-line">Citi stablecoin forecast<a class="c" data-s="30"></a> · Ethena targets &amp; yield<a class="c" data-s="21"></a><a class="c" data-s="5"></a> · bank research<a class="c" data-s="27"></a></p>
+    </div>
+    <ul class="pts">
+      <li>At the top tier, <b>every $10B of USDe ≈ $0.27–0.37 per ENA</b> (assumptions in Go deeper).</li>
+      <li>Built on <b>Citi's ~$1.9T stablecoin forecast for 2030</b> and Ethena's own <b>$100B USDe target</b>, about 5% of that market.<a class="c" data-s="30"></a><a class="c" data-s="21"></a></li>
+    </ul>
+    <div class="act"><div class="why"><span class="tg">For ENA</span><p>Base ~7–10× from here. ~$2.75–3.65 if Ethena hits $100B. $4.40+ is cycle-peak froth, not fair value.</p></div><button class="deep-btn" type="button">Go deeper <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button></div>
+  </div>
+  <div class="deep">
+    <h4>The formula</h4>
+    <p><b>ENA price ≈ USDe supply × gross yield × take rate ÷ buyback yield ÷ token supply</b></p>
+    <h4>Four five-year scenarios (~2031)</h4>
+    <div class="tbl"><table><tr><th></th><th>Slow</th><th>Base</th><th>Executes</th><th>Cycle peak</th></tr>
+      <tr><td><b>USDe</b></td><td><b>$24B</b></td><td><b>$50B</b></td><td><b>$100B</b></td><td><b>$100B</b></td></tr>
+      <tr><td>Share of $2T stablecoins</td><td>1.2%</td><td>2.5%</td><td>5%</td><td>5%</td></tr>
+      <tr><td>Growth needed / yr</td><td>~37%</td><td>~59%</td><td>~83%</td><td>~83%</td></tr>
+      <tr><td>Buybacks / yr</td><td>$0.34B</td><td>$0.71B</td><td>$1.43B</td><td>$1.43B</td></tr>
+      <tr><td>Buyback yield the market accepts</td><td>3–4%</td><td>3–4%</td><td>3–4%</td><td>2–2.5%</td></tr>
+      <tr><td>Valuation</td><td>$9–11B</td><td>$18–24B</td><td>$36–48B</td><td>$57–71B</td></tr>
+      <tr><td><b>ENA (~13B tokens)</b></td><td><b>$0.66–0.88</b></td><td><b>$1.37–1.83</b></td><td><b>$2.74–3.65</b></td><td><b>$4.38–5.48</b></td></tr></table></div>
+    <p>Market size: Citi's 2030 base case is $1.9T of stablecoins (bull case $4T), and separate bank research forecasts $2T by end-2028; we use ~$2T.<a class="c" data-s="30"></a><a class="c" data-s="27"></a> USDe sizes: $100B is Ethena's stated five-year goal<a class="c" data-s="21"></a>; $24B and $50B are our slow and base cases. Buybacks = USDe × 6% gross yield × 25% take × 95% to buybacks.<a class="c" data-s="5"></a><a class="c" data-s="27"></a> 6% is Ethena's own assumption; the blend has averaged 7% since launch.<a class="c" data-s="27"></a> ~13B tokens assumes about four years of burns from 15B. 3–4% is where Uniswap's buyback rate settled.<a class="c" data-s="27"></a> "Cycle peak" is the same business priced at bull-market multiples (40–50× buybacks): a temporary premium, not fair value.</p>
+    <h4>What each price needs</h4>
+    <div class="tbl"><table><tr><th>ENA</th><th>Valuation (13B)</th><th>USDe needed</th></tr>
+      <tr><td>$1</td><td>$13B</td><td>~$27–36B</td></tr>
+      <tr><td>$2</td><td>$26B</td><td>~$55–73B</td></tr>
+      <tr><td>$3.50</td><td>$45B</td><td>~$96–128B</td></tr>
+      <tr><td>$5</td><td>$65B</td><td>~$91B at froth multiples, ~$137B at normal ones</td></tr></table></div>
+    <p>Ranges use a 3–4% buyback yield (2–3% for $5). For scale, USDT is ~$184B and USDC ~$75B today.<a class="c" data-s="28"></a></p>
+    <h4>Versus the 2028 bank forecast</h4>
+    <p>The bank's $2 by 2028 assumes $40B USDe, divides by ~8.9B tokens and counts the full take as buybacks.<a class="c" data-s="24"></a><a class="c" data-s="27"></a> On 15B tokens with the 95% factor, its own math gives ~$1.09 for 2028. Our base case reaches $1.37–1.83 about three years later, with $50B USDe and burns.</p>
+    <h4>For scale</h4>
+    <ul><li>$50B is about two-thirds of USDC today (~$75B).<a class="c" data-s="28"></a></li><li>$100B is Ethena's own five-year target, a bit over half of USDT.<a class="c" data-s="21"></a><a class="c" data-s="28"></a></li><li>Getting from $4.7B to $100B in five years means growing ~83% a year, roughly doubling annually, without incentives.</li></ul>
+    <h4>What has to be true</h4>
+    <ol>
+      <li><b>Yield-bearing dollars gain share.</b> The bank assumes only slightly faster growth than stablecoins overall; $100B needs much faster.<a class="c" data-s="27"></a></li>
+      <li><b>Yield capacity keeps pace.</b> Tokenized T-bills, credit, stocks and commodities give Ethena more to earn on.<a class="c" data-s="27"></a></li>
+      <li><b>Ethena stays the default backend.</b> White-label lets it earn on dollars it doesn't brand. Competitors: tokenized money funds, Sky, Paxos, Agora, Stripe/Bridge.</li>
+      <li><b>Rates hold up.</b> At 4% gross instead of 6%, every price above falls a third.</li>
+      <li><b>The take rate doesn't stall growth.</b> sUSDe has to keep beating the alternatives.</li>
+    </ol>
+    <h4>Not counted</h4>
+    <p>White-label and Ethena Pay revenue is not added on top: in the bank's model it is what supports the take rate rising to 25%. Anything beyond that is upside. Burns are approximated at ~13B tokens; faster burns would lift every row.</p>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="slide" data-title="Why it can rerate">
+  <div class="inner">
+    <p class="q">09 · Why it can rerate</p>
+    <h2>Three stages. One done, the next waits on $7.5B.</h2>
+    <div class="vis stairs-wrap">
+      <div class="stairs">
+        <div class="stg s1" style="--i:0"><div class="h"><b>1 · De-risking</b><span class="st live">Done</span></div><p>Overhang gone, governance fixed, IP to the Foundation.<a class="c" data-s="5"></a><a class="c" data-s="27"></a></p></div>
+        <div class="stg s2" style="--i:1"><div class="h"><b>2 · Cash flow</b><span class="st appr">At $7.5B</span></div><p>Buybacks print. ENA gets valued on yield, not story.<a class="c" data-s="5"></a></p></div>
+        <div class="stg s3" style="--i:2"><div class="h"><b>3 · Compounding</b><span class="st spec">Speculation</span></div><p>Tiers climb toward 25% as tokenization widens the yield base.</p></div>
+      </div>
+      <div class="chipsrow">
+        <span>$7.5B <b>pipe on</b></span><span>$15B <b>old peak</b></span><span>$25B <b>top tier</b></span><span>$40B <b>2028 path</b></span>
+      </div>
+    </div>
+    <ul class="pts">
+      <li>At $15B, buybacks run ~$128M a year, about <b>4.5% of ENA's fully diluted value</b>. At $25B it's ~12.5%. That's where the market has to reprice.<a class="c" data-s="5"></a><a class="c" data-s="27"></a></li>
+      <li>On a strict mature multiple, <b>today's ~$0.19 already prices USDe back near its old ~$15B peak</b>. The upside is what comes after.<a class="c" data-s="27"></a></li>
+    </ul>
+    <div class="act"><div class="why"><span class="tg">For ENA</span><p>Supply gets ENA to buybacks. Buybacks are what can change the multiple.</p></div><button class="deep-btn" type="button">Go deeper <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button></div>
+  </div>
+  <div class="deep">
+    <h4>The milestones</h4>
+    <p>Buybacks from Ethena's illustration (6% gross return, tiered take).<a class="c" data-s="5"></a><a class="c" data-s="27"></a> "Vs today's value" uses ~$2.85B (all 15B tokens at ~$0.19).</p>
+    <div class="tbl"><table><tr><th>USDe</th><th>What it unlocks</th><th>Buybacks / yr</th><th>vs today's value</th></tr>
+      <tr><td>$7.5B</td><td>Pipe switches on</td><td>$21M</td><td>~0.75%</td></tr>
+      <tr><td>$10B</td><td>Take rate doubles</td><td>$57M</td><td>~2%</td></tr>
+      <tr><td>$15B</td><td>Old peak; ≈ what today's price assumes</td><td>$128M</td><td>~4.5%</td></tr>
+      <tr><td>$25B</td><td>Top 25% tier</td><td>$356M</td><td>~12.5%</td></tr>
+      <tr><td>$40B</td><td>2028 forecast path</td><td>$570M</td><td>~20%</td></tr></table></div>
+    <p>USDe was $14.8B in October 2025.<a class="c" data-s="2"></a> A buyback near 3–4% of market cap is where Uniswap settled; well above that, the price has to rise.<a class="c" data-s="27"></a></p>
+    <h4>What's priced in today</h4>
+    <p>A strict test: value ENA where buybacks equal 3.5% of its value (roughly where Uniswap settled), on all 15B tokens, with no burns or extra revenue.<a class="c" data-s="5"></a><a class="c" data-s="27"></a></p>
+    <div class="tbl"><table><tr><th>USDe</th><th>Take</th><th>Buybacks / yr</th><th>Value at 3.5%</th><th>Price (15B)</th></tr>
+      <tr><td>$7.5B</td><td>5%</td><td>$21M</td><td>$0.61B</td><td>~$0.04</td></tr>
+      <tr><td>$10B</td><td>10%</td><td>$57M</td><td>$1.6B</td><td>~$0.11</td></tr>
+      <tr><td>$15B</td><td>15%</td><td>$128M</td><td>$3.7B</td><td>~$0.24</td></tr>
+      <tr><td>$25B</td><td>25%</td><td>$356M</td><td>$10.2B</td><td>~$0.68</td></tr>
+      <tr><td>$40B</td><td>25%</td><td>$570M</td><td>$16.3B</td><td>~$1.09</td></tr></table></div>
+    <p>~$0.19 means ~$2.85B of value, or ~$100M of buybacks a year at 3.5%. Below the $15B step the take is only 10%, which tops out at ~$86M; at $15B it jumps to ~$128M. So today's price sits right at the $15B step.</p>
+    <h4>Where the rerate comes from</h4>
+    <p>Supply growth sets what the buybacks are worth. A rerate means the market paying up for that cash flow once it is visible and recurring, and pricing in the growth behind it. That's stage 2. No probabilities are assigned; this is a thesis, not a forecast.</p>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="slide" data-title="Sources">
+  <div class="inner solo">
+    <p class="q">Sources · caveats</p>
+    <h2>Where every number came from.</h2>
+    <ul class="srcs" id="srcList"></ul>
+    <p class="src-line" style="margin-top:12px;max-width:80ch">Caveats: circulating supply differs by source; hedged-perp backing estimates range from ~0.5% to ~11% (Apr 2026); the framework agreement is an agreement in principle; scenario prices are our model, not forecasts. Research date Oct 15, 2026. Not investment advice.</p>
+  </div>
+</section>
+
+</main>
+
+<nav class="nav" aria-label="Slide navigation">
+  <button class="nb" type="button" id="ovBtn" aria-label="Slide overview" aria-haspopup="dialog"><svg viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1.2"/><rect x="9" y="2.5" width="4.5" height="4.5" rx="1.2"/><rect x="2.5" y="9" width="4.5" height="4.5" rx="1.2"/><rect x="9" y="9" width="4.5" height="4.5" rx="1.2"/></svg></button>
+  <button class="nb" type="button" id="prev" aria-label="Previous slide"><svg viewBox="0 0 16 16"><path d="M4 10l4-4 4 4"/></svg></button>
+  <div class="mid"><span class="count" id="count" aria-live="polite">1 / 11</span><div class="bar" aria-hidden="true"><i id="fill"></i></div></div>
+  <button class="nb" type="button" id="next" aria-label="Next slide"><svg viewBox="0 0 16 16"><path d="M4 6l4 4 4-4"/></svg></button>
+</nav>
+
+<div class="ov" id="ov" hidden role="dialog" aria-modal="true" aria-labelledby="ovTitle">
+  <div class="ov-card">
+    <div class="ov-head"><h3 id="ovTitle">All slides</h3><button class="x" type="button" id="ovClose" aria-label="Close overview">×</button></div>
+    <div class="ov-grid" id="ovGrid"></div>
+  </div>
+</div>
+
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="shTitle">
+  <div class="sh-card">
+    <div class="sh-head"><h3 id="shTitle">Go deeper</h3><button class="x" type="button" id="shClose" aria-label="Close">×</button></div>
+    <div class="sh-body" id="shBody"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var SOURCES={
+    1:["CoinGecko — Ethena (ENA) market data","Oct 12, 2026","https://www.coingecko.com/en/coins/ethena"],
+    2:["DefiLlama — USDe supply and chain breakdown","Oct 12, 2026","https://defillama.com/stablecoin/ethena-usde"],
+    3:["DefiLlama — Ethena USDe fees and revenue","Oct 12, 2026","https://defillama.com/protocol/ethena-usde"],
+    4:["Ethena documentation","accessed Oct 12, 2026","https://docs.ethena.fi"],
+    5:["Tokenomist — Aug 27 package, unlocks, fee-switch table and vote","Sept 2026","https://tokenomist.ai/research/ethena-bought-out-its-sellers-and-deleted-the-investor-unlock-calendar-the-buyback-replacing-it-arms-at-7-5b-usde"],
+    6:["The Block — Ethena Foundation's four changes","Aug 27, 2026","https://theblock.co/news/ecosystems/2026-08-27-ethena-foundation-proposes-fee-switch-ena-token-buybacks-other-updates-412951"],
+    7:["TokenIntel — Ethena research (data Apr–Jul 2026)","2026","https://tokenintel.org/research/ethena"],
+    8:["AMBCrypto — reserve composition (May 20 data)","May 2026","https://ambcrypto.com/ethenas-latest-reserve-data-points-to-a-quieter-more-conservative-strategy-shift/"],
+    10:["The Block — bStocks and equity perps in USDe backing","Sept 25, 2026","https://www.theblock.co/news/deals/2026-09-25-ethena-expands-usde-backing-strategy-into-bstocks-and-equity-perpetuals-on-binance-416367"],
+    11:["CryptoTicker — ether.fi USD on Ethena white-label","Oct 9, 2026","https://cryptoticker.io/en/ethena-etherfi-usd-whitelabel-usde-buyback/"],
+    13:["StablecoinX — Q2 2026 results (data at Jun 30)","Aug 2026","https://s25.q4cdn.com/845630585/files/doc_news/StablecoinX-Inc--Continues-to-Build-On-the-Ethena-Ecosystem-Reports-ENA-Treasury-of-Approximately-3-0-Billion-Tokens-at-End-of-Second-TBVVQ.pdf"],
+    14:["CoinMarketCap Academy — Ethena Pay launch","Sept 2026","https://coinmarketcap.com/academy/article/ethena-pay-goes-live-in-48-countries-with-6percent-yield-and-avax-cashback"],
+    15:["The Block — Janus Henderson takes ENA position","Jun 9, 2026","https://www.theblock.co/post/404109/janus-henderson-takes-ena-position-eyes-regulated-investment-products-tied-to-ethena"],
+    16:["FalconX — $1B facility with Ethena","Aug 19, 2026","https://www.falconx.io/newsroom/falconx-partners-with-ethena-on-1-billion-warehouse-financing-facility-to-expand-institutional-lending-capacity"],
+    17:["US Treasury — daily bill rates (13-week 4.16%)","Oct 9, 2026","https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_bill_rates&field_tdr_date_value_month=202610"],
+    18:["Portals — sUSDe APY on Ethereum (4.87%)","Oct 11, 2026","https://explorer.portals.fi/yield/ethereum:0x9d39a5de30e57443bff2a8307a4256c8797a3497"],
+    20:["CoinMarketCap — Ethena latest updates (Oct 8 outflow, Sui SDK)","Oct 2026","https://coinmarketcap.com/cmc-ai/ethena/latest-updates/"],
+    21:["BeInCrypto via Yahoo Finance — buyout details, $100B USDe target","Aug 27, 2026","https://finance.yahoo.com/markets/crypto/articles/ethena-just-paid-early-investors-161011399.html"],
+    22:["Blockhead — ether.fi USD with Ethena running reserves","Oct 7, 2026","https://blockhead.co/2026/10/07/ether-fi-launches-dollar-stablecoin-with-ethena-running-the-reserves"],
+    23:["ForkLog — Ethena proposes revenue to ENA buyback; MFA","Aug 27, 2026","https://forklog.com/en/ethena-proposes-allocating-100-of-revenue-to-ena-buyback/"],
+    24:["The Block — Standard Chartered initiates ENA coverage, $2 by 2028","Sept 30, 2026","https://www.theblock.co/news/markets/2026-09-30-standard-chartered-sees-over-600-upside-for-ena-expects-usde-to-hit-40billion-by-2028-417274/"],
+    25:["Ethena September 2026 recap (via Phemex News)","Oct 1, 2026","https://phemex.com/news/article/ethena-usde-supply-surges-over-700m-in-september-becomes-top-collateral-on-morpho-98479"],
+    26:["The Block — Ethena brings USDe and sUSDe to TRON","Sept 11, 2026","https://theblock.co/news/sponsored/2026-09-11-ethena-brings-usde-and-susde-to-tron-expanding-digital-dollar-access-across-its-stablecoin-ecosystem-414262"],
+    27:["Standard Chartered Global Research — Ethena: A scalable yield-bearing stablecoin (report pages)","Sept 30, 2026",""],
+    28:["Stablecoin Insider — Q3 2026 stablecoin report","Oct 2026","https://stablecoininsider.org/q3-2026-stablecoin-report-main-insights/"],
+    29:["rwa.xyz and Token Terminal data via @fintechfrank — RWA market cap, tokenized equities","Oct 12, 2026","https://app.rwa.xyz/"],
+    30:["Transak — stablecoin market cap 2026 and forecasts (Citi 2030)","2026","https://transak.com/blog/stablecoin-market-cap-2026"],
+    31:["TechFlow — Ethena ends USDe incentives before buybacks start","Oct 10, 2026","https://www.techflowpost.com/en-US/article/34459"],
+    32:["KuCoin News / MSB Intel — $1.061B lifetime protocol fees","Oct 12, 2026","https://kucoin.com/news/flash/ethena-accumulates-1-061-billion-in-protocol-fees-since-2023"],
+    33:["@patfscott on X — token revenue multiples (DefiLlama data)","~Oct 9, 2026",""],
+    34:["TradingView / X ticker — ENA ~$0.18–0.19","Oct 14–18, 2026","https://www.tradingview.com/symbols/ENAUSDT/"],
+    35:["rwa.xyz — Ethena USDe market cap $4.74B, +13.7% over 30 days","Oct 18, 2026","https://app.rwa.xyz/"],
+    36:["@Reignots on X — USDe run-rate, Robinhood Chain, trade.xyz rumor","Oct 18, 2026",""],
+    37:["The Block — USDT on TRON exceeds $90 billion","2026","https://www.theblock.co/post/407792/usdt-on-tron-exceeds-90-billion-as-tron-leads-usdt-transfer-volume-with-4-2-trillion-ytd"],
+    38:["Crypto Briefing — Ethena extends USDe backing to equity perpetuals","Aug 28, 2026","https://cryptobriefing.com/ethena-usde-equity-perpetuals-backing/"],
+    39:["KuCoin — StablecoinX stock hits record high","Sept 23, 2026","https://www.kucoin.com/blog/stablecoinx-record-high-ethena-investors"]
+  };
+  [].forEach.call(document.querySelectorAll('a.c[data-s]'),function(a){
+    var s=SOURCES[a.getAttribute('data-s')]; if(!s) return;
+    if(s[2]){ a.href=s[2]; a.target='_blank'; a.rel='noopener noreferrer'; }
+    a.textContent='['+a.getAttribute('data-s')+']'; a.title=s[0]+' ('+s[1]+')';
+  });
+  var list=document.getElementById('srcList');
+  Object.keys(SOURCES).forEach(function(k){
+    var s=SOURCES[k], li=document.createElement('li');
+    li.innerHTML='<span class="n">'+k+'</span><a target="_blank" rel="noopener noreferrer"></a> <span class="dt"></span>';
+    if(s[2]) li.querySelector('a').href=s[2]; li.querySelector('a').textContent=s[0]; li.querySelector('.dt').textContent='· '+s[1];
+    list.appendChild(li);
+  });
+
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  slides.forEach(function(sl){
+    [].slice.call(sl.querySelector('.inner').children).forEach(function(el){
+      el.classList.add('r');
+      if(el.classList.contains('vis')) el.classList.add('fig');
+      var t=el.tagName.toLowerCase(); if(t==='h1'||t==='h2') el.classList.add('hd');
+    });
+  });
+  var current=0;
+  if(reduce||!('IntersectionObserver' in window)){ slides.forEach(function(s){s.classList.add('in');}); }
+  else{
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        var el=e.target;
+        if(e.isIntersecting&&e.intersectionRatio>0.2){el.classList.add('in');el.classList.remove('out');}
+        else if(!e.isIntersecting){el.classList.remove('in'); if(e.boundingClientRect.top<0) el.classList.add('out'); else el.classList.remove('out');}
+      });
+    },{threshold:[0,0.2,0.5]});
+    slides.forEach(function(s){io.observe(s);});
+    slides[0].classList.add('in');
+  }
+
+  var fill=document.getElementById('fill'),count=document.getElementById('count'),prev=document.getElementById('prev'),next=document.getElementById('next');
+  function idxNow(){ var h=document.documentElement, top=window.pageYOffset||h.scrollTop||document.body.scrollTop||0, mid=top+(window.innerHeight||h.clientHeight)/2, idx=0;
+    for(var i=0;i<slides.length;i++){ if(slides[i].offsetTop<=mid) idx=i; } return idx; }
+  function update(){ current=idxNow();
+    fill.style.width=(slides.length>1?(current/(slides.length-1))*100:0)+'%';
+    count.textContent=(current+1)+' / '+slides.length; prev.disabled=current===0; next.disabled=current===slides.length-1; }
+  function go(i){ i=Math.max(0,Math.min(slides.length-1,i)); slides[i].scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'}); }
+  window.addEventListener('scroll',update,{passive:true}); window.addEventListener('resize',update); update();
+  prev.addEventListener('click',function(){go(current-1);}); next.addEventListener('click',function(){go(current+1);});
+
+  var ov=document.getElementById('ov'),ovGrid=document.getElementById('ovGrid'),lastFocus=null;
+  slides.forEach(function(s,i){
+    var b=document.createElement('button'); b.type='button';
+    b.innerHTML='<span class="n">'+(i===0?'Cover':i===slides.length-1?'End':String(i).padStart(2,'0'))+'</span><span class="t"></span>';
+    b.querySelector('.t').textContent=s.getAttribute('data-title');
+    b.addEventListener('click',function(){closeOv(); go(i);}); ovGrid.appendChild(b);
+  });
+  function openOv(){ lastFocus=document.activeElement; ov.hidden=false;
+    [].forEach.call(ovGrid.children,function(b,i){b.setAttribute('aria-current',i===current?'true':'false');}); ovGrid.children[current].focus(); }
+  function closeOv(){ ov.hidden=true; if(lastFocus) lastFocus.focus(); }
+  document.getElementById('ovBtn').addEventListener('click',openOv); document.getElementById('ovClose').addEventListener('click',closeOv);
+  ov.addEventListener('click',function(e){ if(e.target===ov) closeOv(); });
+
+  var sheet=document.getElementById('sheet'),shBody=document.getElementById('shBody'),shTitle=document.getElementById('shTitle'),shClose=document.getElementById('shClose');
+  [].forEach.call(document.querySelectorAll('.deep-btn'),function(btn){
+    btn.setAttribute('aria-haspopup','dialog');
+    btn.addEventListener('click',function(){
+      var sl=btn.closest('.slide'), d=sl.querySelector('.deep');
+      lastFocus=btn; shTitle.textContent=sl.getAttribute('data-title');
+      shBody.innerHTML=d?d.innerHTML:''; sheet.hidden=false; sheet.classList.add('opening');
+      requestAnimationFrame(function(){requestAnimationFrame(function(){sheet.classList.remove('opening');});});
+      sheet.querySelector('.sh-card').scrollTop=0; shClose.focus();
+    });
+  });
+  function closeSheet(){ sheet.hidden=true; if(lastFocus) lastFocus.focus(); }
+  shClose.addEventListener('click',closeSheet); sheet.addEventListener('click',function(e){ if(e.target===sheet) closeSheet(); });
+  function trap(e,root){ if(e.key!=='Tab') return;
+    var f=[].slice.call(root.querySelectorAll('a[href],button:not([disabled]),input')).filter(function(x){return x.offsetParent!==null;});
+    if(!f.length) return; var a=f[0], z=f[f.length-1];
+    if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus();} else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus();} }
+  document.addEventListener('keydown',function(e){
+    if(!sheet.hidden){ if(e.key==='Escape') closeSheet(); trap(e,sheet); return; }
+    if(!ov.hidden){ if(e.key==='Escape') closeOv(); trap(e,ov); return; }
+    var tag=(document.activeElement&&document.activeElement.tagName)||'';
+    if(e.key==='ArrowDown'||e.key==='ArrowRight'||e.key==='PageDown'||(e.key===' '&&tag!=='BUTTON')){e.preventDefault();go(current+1);}
+    else if(e.key==='ArrowUp'||e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(current-1);}
+    else if(e.key==='Home'){e.preventDefault();go(0);} else if(e.key==='End'){e.preventDefault();go(slides.length-1);}
+    else if(e.key==='o'||e.key==='O'){openOv();}
+  });
+})();
+</script>
+
+</html>
