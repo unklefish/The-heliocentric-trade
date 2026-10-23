@@ -154,6 +154,12 @@
   .ob .say em{font-style:normal;font-family:var(--m);font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px dashed var(--mid);color:var(--mid);border-radius:999px;padding:1px 6px;flex:0 0 auto}
   .ob .ans{display:block;font-size:13.5px;color:var(--ink);line-height:1.35;margin-top:4px;font-weight:500}
   .ob.k{background:var(--white);border-color:var(--white)} .ob.k .say{color:#3A3A3B} .ob.k .say em{border-color:#3A3A3B;color:#3A3A3B} .ob.k .ans{color:var(--black)} .ob.k .c{color:#3A3A3B}
+  .tldr{border:1px solid var(--rule);border-radius:20px;padding:12px 14px;margin:0 0 14px;max-width:560px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02))}
+  .tldr .tg{display:inline-block;font-family:var(--m);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--black);background:var(--white);border-radius:999px;padding:3px 8px;margin-bottom:8px}
+  .tldr ul{list-style:none;margin:0;padding:0}
+  .tldr li{font-size:clamp(13.5px,3.6vw,16px);line-height:1.4;color:var(--mid);padding:3px 0 3px 14px;position:relative}
+  .tldr li:before{content:"";position:absolute;left:0;top:11px;width:5px;height:5px;border-radius:50%;background:var(--muted)}
+  .tldr b{color:var(--ink);font-weight:600}
   .srcs{list-style:none;margin:0;padding:0;columns:1;column-gap:28px}
   .srcs li{break-inside:avoid;font-size:12.5px;line-height:1.4;color:var(--mid);padding:5px 0 5px 28px;position:relative;border-bottom:1px solid var(--rule)}
   .srcs li .n{position:absolute;left:0;top:5px;font-family:var(--m);font-size:11px;color:var(--ink)}
@@ -246,7 +252,7 @@
   }
 </style>
 
-<div class="top" aria-hidden="true"><span>ENA · Thesis</span><span>Oct 19, 2026</span></div>
+<div class="top" aria-hidden="true"><span>ENA · Thesis</span><span>Oct 23, 2026</span></div>
 
 <main class="deck" id="deck">
 
@@ -255,7 +261,11 @@
   <div class="inner solo">
     <p class="q">Ethena · ENA · our thesis</p>
     <h1>The Heliocentric<br><span class="dim">trade.</span></h1>
-    <p class="sub">A fixed-supply token at the center of a growing set of regulated dollar businesses. The pipe back to the token is built. This is why ENA can rerate.</p>
+    <div class="tldr"><span class="tg">TL;DR · new to Ethena?</span><ul>
+      <li><b>USDe</b> is a digital dollar that pays yield, earned from hedged trades, lending and tokenized T-bills. It's the #4 stablecoin.</li>
+      <li><b>ENA</b> is Ethena's token. Once USDe passes $7.5B, a cut of Ethena's revenue buys ENA back, rising as USDe grows.</li>
+      <li><b>The bet:</b> stablecoins keep growing, more holders want yield above T-bills, USDe grabs a slice, and buybacks reprice ENA.</li>
+    </ul></div>
     <div class="meta">
       <span><b>ENA ~$0.19</b> Oct 18<a class="c" data-s="34"></a></span>
       <span><b>USDe $4.74B</b> Oct 18<a class="c" data-s="35"></a></span>
@@ -578,14 +588,17 @@
       <p class="src-line">Citi stablecoin forecast<a class="c" data-s="30"></a> · Ethena targets &amp; yield<a class="c" data-s="21"></a><a class="c" data-s="5"></a> · bank research<a class="c" data-s="27"></a></p>
     </div>
     <ul class="pts">
-      <li>At the top tier, <b>every $10B of USDe ≈ $0.27–0.37 per ENA</b> (assumptions in Go deeper).</li>
-      <li>Built on <b>Citi's ~$1.9T stablecoin forecast for 2030</b> and Ethena's own <b>$100B USDe target</b>, about 5% of that market.<a class="c" data-s="30"></a><a class="c" data-s="21"></a></li>
+      <li>Above $25B USDe, <b>every $10B ≈ $0.27–0.37 per ENA</b> (assumptions in Go deeper).</li>
+      <li>Think in layers: <b>all stablecoins</b> (Citi: ~$1.9T by 2030) → the share that wants yield → the share that wants <b>more than T-bills</b>. Ethena's $100B goal is ~5% of the first layer.<a class="c" data-s="30"></a><a class="c" data-s="21"></a></li>
     </ul>
     <div class="act"><div class="why"><span class="tg">For ENA</span><p>Base ~7–10× from here. ~$2.75–3.65 if Ethena hits $100B. $4.40+ is cycle-peak froth, not fair value.</p></div><button class="deep-btn" type="button">Go deeper <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5"/></svg></button></div>
   </div>
   <div class="deep">
     <h4>The formula</h4>
-    <p><b>ENA price ≈ USDe supply × gross yield × take rate ÷ buyback yield ÷ token supply</b></p>
+    <p><b>ENA price ≈ USDe supply × gross yield (~6%) × take rate (25%) × 95% to buybacks ÷ buyback yield (3–4%, where Uniswap settled) ÷ token supply (~13B after burns)</b></p>
+    <h4>Sizing the market in layers</h4>
+    <p>1) How big does the total stablecoin market get? Citi's base case is ~$1.9T by 2030.<a class="c" data-s="30"></a> 2) What share of it wants yield? About 5% of stablecoins pay yield today.<a class="c" data-s="27"></a> 3) What share wants more than the T-bill rate? That last group is USDe's core market. Ethena's goal of $100B USDe within five years is ~5% of the first layer.<a class="c" data-s="21"></a></p>
+    <p>Above $25B, where Ethena's fee-switch schedule tops out at 25%, every $10B of USDe adds ~$0.27–0.37 to ENA. At $100B that implies ~$2.74–3.65.</p>
     <h4>Four five-year scenarios (~2031)</h4>
     <div class="tbl"><table><tr><th></th><th>Slow</th><th>Base</th><th>Executes</th><th>Cycle peak</th></tr>
       <tr><td><b>USDe</b></td><td><b>$24B</b></td><td><b>$50B</b></td><td><b>$100B</b></td><td><b>$100B</b></td></tr>
