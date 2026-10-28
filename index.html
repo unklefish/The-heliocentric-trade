@@ -19,15 +19,16 @@
     color-scheme:dark;
   }
   *{box-sizing:border-box}
-  html{scroll-behavior:smooth;scroll-snap-type:y mandatory;background:var(--bg)}
+  html{background:var(--bg)}
+  html,body{height:100%;overflow:hidden;overscroll-behavior:none}
   html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
   body{overflow-x:hidden}
   a{color:inherit} button{font-family:inherit;color:inherit}
   :focus-visible{outline:2px solid var(--white);outline-offset:3px;border-radius:8px}
 
-  .deck{position:relative;perspective:1400px;perspective-origin:50% 40%}
-  .slide{position:relative;min-height:100vh;min-height:100dvh;padding:58px 18px 96px;display:flex;align-items:center;
-    scroll-snap-align:start;transform-style:preserve-3d;
+  .deck{position:fixed;inset:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;scroll-snap-type:y mandatory}
+  .slide{position:relative;min-height:100%;padding:58px 18px 96px;display:flex;align-items:center;
+    scroll-snap-align:start;scroll-snap-stop:always;transform-style:flat;
     background:radial-gradient(900px 620px at 78% 28%,#151516 0%,rgba(21,21,22,0) 70%),var(--bg)}
   .inner{width:100%;max-width:1160px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr)}
   .q{font-family:var(--m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;display:flex;align-items:center;gap:8px}
@@ -54,7 +55,7 @@
   .vis{margin:4px 0 16px;min-width:0}
   .bub{background:linear-gradient(180deg,#161617 0%,#0D0D0E 100%);border:1px solid var(--rule);border-radius:24px;padding:16px;
     box-shadow:0 40px 70px -30px rgba(0,0,0,.9),0 0 0 1px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06)}
-  .vis svg.ch{display:block;width:100%;height:auto;max-height:31vh;overflow:visible;fill:#F5F5F3;font-family:var(--f)}
+  .vis svg.ch{display:block;width:100%;height:auto;max-height:31svh;overflow:visible;fill:#F5F5F3;font-family:var(--f)}
   .src-line{font-family:var(--m);font-size:10px;color:var(--muted);margin-top:8px;line-height:1.5}
   .src-line .c{font-size:1em;vertical-align:baseline}
 
@@ -70,7 +71,7 @@
 
   /* thesis bubbles */
   .legs-wrap{perspective:1000px}
-  .legs{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;transform:rotateX(10deg);transform-style:preserve-3d;transform-origin:50% 100%}
+  .legs{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;transform:perspective(900px) rotateX(10deg);transform-style:flat;transform-origin:50% 100%}
   .leg{border:1px solid var(--rule);border-radius:20px;padding:11px 14px;background:linear-gradient(180deg,#19191A,#101011);
     box-shadow:0 18px 30px -12px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.06);min-width:0;display:grid;grid-template-columns:28px minmax(0,1fr);gap:0 10px;align-items:start}
   .leg .n{grid-row:span 2;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-family:var(--m);font-size:12px}
@@ -141,7 +142,7 @@
   .mech span.m{font-size:12px;color:var(--mid);display:inline-flex;gap:6px;align-items:center;border:1px solid var(--rule);border-radius:999px;padding:4px 10px 4px 5px;background:rgba(255,255,255,.03)}
 
   .tiles-wrap{perspective:1000px}
-  .tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;transform:rotateX(12deg);transform-style:preserve-3d;transform-origin:50% 100%}
+  .tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;transform:perspective(900px) rotateX(12deg);transform-style:flat;transform-origin:50% 100%}
   .tile{border:1px solid var(--rule);border-radius:18px;padding:9px 11px;background:linear-gradient(180deg,#19191A,#101011);
     box-shadow:0 16px 26px -12px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.05);min-width:0}
   .tile b{display:block;font-size:13.5px;font-weight:600}
@@ -291,6 +292,30 @@
     .slide{padding:54px 16px 90px}
     .bub{padding:13px;border-radius:22px}
   }
+  /* Shorter phone screens (Safari with toolbars): tighten so slides fit one swipe */
+  @media (max-width:979px) and (max-height:880px){
+    .slide{padding:46px 16px 80px}
+    .q{margin-bottom:6px}
+    h2{font-size:clamp(22px,5.9vw,34px);margin-bottom:9px}
+    .pts{margin-bottom:8px} .pts li{font-size:14px;line-height:1.36;padding:3px 0 3px 15px} .pts li:before{top:10px}
+    .vis{margin:2px 0 10px}
+    .bub{padding:11px}
+    .why{padding:8px 12px} .why p{font-size:13.5px;line-height:1.36}
+    .deep-btn{padding:7px 13px}
+    .leg{padding:9px 12px} .legs{gap:6px} .tile{padding:7px 10px} .tiles{gap:6px} .row{padding-top:7px;padding-bottom:7px}
+    .sys{height:170px}
+    .vis svg.ch{max-height:26svh}
+    .src-line{margin-top:5px}
+  }
+  @media (max-width:979px) and (max-height:700px){
+    .slide{padding:42px 14px 76px}
+    h2{font-size:clamp(21px,5.6vw,30px)}
+    .pts li{font-size:13.5px}
+    .sys{height:150px}
+    .vis svg.ch{max-height:24svh}
+  }
+  /* bottom stop for slides that are still taller than the screen */
+  .snap-end{position:absolute;left:0;right:0;bottom:0;height:1px;scroll-snap-align:end;scroll-snap-stop:always;pointer-events:none}
 
   /* Scroll-scrubbed reveal: every element is tied to the slide's scroll position,
      so it builds in exactly as fast as you swipe and reverses when you scroll back. */
@@ -302,8 +327,9 @@
     html.js .slide.in .leg{animation-name:none}
     html.js .r{animation:rvIn linear both,rvOut linear forwards;animation-timeline:--sl,--sl;
       animation-range:cover var(--a,10svh) cover var(--b,60svh),exit var(--xa,4svh) exit var(--xb,58svh)}
-    html.js .r2{--ty:30px;animation:rvIn linear both;animation-timeline:--sl;animation-range:cover var(--a,30svh) cover var(--b,80svh)}
-    @keyframes rvIn{from{opacity:0;transform:translate3d(0,var(--ty,44px),0) scale(.95)}to{opacity:1}}
+    html.js .r2{animation:rvIn2 linear both;animation-timeline:--sl;animation-range:cover var(--a,30svh) cover var(--b,80svh)}
+    @keyframes rvIn{from{opacity:0;transform:translate3d(0,44px,0) scale(.95)}to{opacity:1}}
+    @keyframes rvIn2{from{opacity:0;transform:translate3d(0,30px,0) scale(.95)}to{opacity:1}}
     @keyframes rvOut{from{opacity:1}to{opacity:0;transform:translate3d(0,-34px,0) scale(.98)}}
   }
   @media (min-width:980px){
@@ -883,6 +909,12 @@
     });
   });
   var current=0;
+  function markTall(){ var vh=document.getElementById('deck').clientHeight;
+    slides.forEach(function(sl){ var e=sl.querySelector(':scope>.snap-end'), tall=sl.offsetHeight>vh+24;
+      if(tall&&!e){ e=document.createElement('i'); e.className='snap-end'; e.setAttribute('aria-hidden','true'); sl.appendChild(e); }
+      else if(!tall&&e){ e.remove(); } }); }
+  markTall(); var mtT; window.addEventListener('resize',function(){ clearTimeout(mtT); mtT=setTimeout(markTall,150); });
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(markTall);
   if(reduce||!('IntersectionObserver' in window)){ slides.forEach(function(s){s.classList.add('in');}); }
   else{
     var io=new IntersectionObserver(function(es){
@@ -914,7 +946,8 @@
     ctx.globalAlpha=1; }
   sizeCv(); drawStars(); window.addEventListener('resize',function(){sizeCv();drawStars();});
   var coverOn=true;
-  var scrolling=0, fr=0; window.addEventListener('scroll',function(){ scrolling=Date.now(); },{passive:true});
+  var deckEl=document.getElementById('deck');
+  var scrolling=0, fr=0; deckEl.addEventListener('scroll',function(){ scrolling=Date.now(); },{passive:true});
   if(!reduce){ (function loop(){ fr++; if(coverOn && (fr&1) && Date.now()-scrolling>160){ang+=0.0032; drawStars();} requestAnimationFrame(loop); })();
     var stage=document.getElementById('orbStage');
     window.addEventListener('pointermove',function(e){ if(!coverOn) return; var nx=e.clientX/window.innerWidth-.5, ny=e.clientY/window.innerHeight-.5;
@@ -926,13 +959,13 @@
   if('IntersectionObserver' in window){ new IntersectionObserver(function(es){ coverOn=es[0].isIntersecting; var h=document.querySelector('.hero3d'); if(h) h.style.visibility=coverOn?'':'hidden'; },{threshold:0}).observe(slides[0]); }
 
   var fill=document.getElementById('fill'),count=document.getElementById('count'),prev=document.getElementById('prev'),next=document.getElementById('next');
-  function idxNow(){ var h=document.documentElement, top=window.pageYOffset||h.scrollTop||document.body.scrollTop||0, mid=top+(window.innerHeight||h.clientHeight)/2, idx=0;
+  function idxNow(){ var top=deckEl.scrollTop, mid=top+deckEl.clientHeight/2, idx=0;
     for(var i=0;i<slides.length;i++){ if(slides[i].offsetTop<=mid) idx=i; } return idx; }
   function update(){ current=idxNow();
     fill.style.width=(slides.length>1?(current/(slides.length-1))*100:0)+'%';
     count.textContent=(current+1)+' / '+slides.length; prev.disabled=current===0; next.disabled=current===slides.length-1; }
   function go(i){ i=Math.max(0,Math.min(slides.length-1,i)); slides[i].scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'}); }
-  var upT=false; window.addEventListener('scroll',function(){ if(!upT){upT=true; requestAnimationFrame(function(){upT=false; update();});} },{passive:true}); window.addEventListener('resize',update); update();
+  var upT=false; deckEl.addEventListener('scroll',function(){ if(!upT){upT=true; requestAnimationFrame(function(){upT=false; update();});} },{passive:true}); window.addEventListener('resize',update); update();
   prev.addEventListener('click',function(){go(current-1);}); next.addEventListener('click',function(){go(current+1);});
 
   var ov=document.getElementById('ov'),ovGrid=document.getElementById('ovGrid'),lastFocus=null;
