@@ -259,8 +259,8 @@
     .slide{view-timeline:--sl block}
     .inner.tx{animation:tIn linear both,tOut linear forwards;animation-timeline:--sl,--sl;
       animation-range:cover 0svh cover 96svh,exit 0% exit 100%}
-    @keyframes tIn{from{transform:perspective(1300px) translate3d(0,48px,-160px) rotateX(14deg) scale(.95);opacity:.35}to{transform:none;opacity:1}}
-    @keyframes tOut{from{transform:none;opacity:1}to{transform:perspective(1300px) translate3d(0,-48px,-160px) rotateX(-14deg) scale(.95);opacity:.35}}
+    @keyframes tIn{from{transform:perspective(1300px) translate3d(0,24px,-60px) rotateX(6deg);opacity:.6}to{transform:none;opacity:1}}
+    @keyframes tOut{from{transform:none;opacity:1}to{transform:perspective(1300px) translate3d(0,-24px,-60px) rotateX(-6deg);opacity:.6}}
   }
   .slide{transform-style:flat}
   @media (max-width:979px){
@@ -327,10 +327,20 @@
     html.js .slide.in .leg{animation-name:none}
     html.js .r{animation:rvIn linear both,rvOut linear forwards;animation-timeline:--sl,--sl;
       animation-range:cover var(--a,10svh) cover var(--b,60svh),exit var(--xa,4svh) exit var(--xb,58svh)}
-    html.js .r2{animation:rvIn2 linear both;animation-timeline:--sl;animation-range:cover var(--a,30svh) cover var(--b,80svh)}
-    @keyframes rvIn{from{opacity:0;transform:translate3d(0,44px,0) scale(.95)}to{opacity:1}}
-    @keyframes rvIn2{from{opacity:0;transform:translate3d(0,30px,0) scale(.95)}to{opacity:1}}
-    @keyframes rvOut{from{opacity:1}to{opacity:0;transform:translate3d(0,-34px,0) scale(.98)}}
+    html.js .r2{animation:rvIn2 linear both,rvOut2 linear forwards;animation-timeline:--sl,--sl;
+      animation-range:cover var(--a,30svh) cover var(--b,80svh),exit var(--xa,0svh) exit var(--xb,30svh)}
+    html.js .r,html.js .r2{transform-origin:50% 60%;backface-visibility:hidden}
+    /* rise out of depth, tilted back, small -> settles flat */
+    @keyframes rvIn{0%{opacity:0;transform:perspective(900px) translate3d(0,70px,-260px) rotateX(22deg) scale(.82)}
+      60%{opacity:1}100%{opacity:1}}
+    /* cards: bubble up from far away with a soft overshoot */
+    @keyframes rvIn2{0%{opacity:0;transform:perspective(800px) translate3d(0,46px,-220px) rotateX(16deg) scale(.7)}
+      55%{opacity:1}
+      80%{opacity:1;transform:perspective(800px) translate3d(0,-3px,10px) rotateX(-1deg) scale(1.03)}
+      100%{opacity:1}}
+    /* leave by floating up and past the viewer */
+    @keyframes rvOut{0%{opacity:1}100%{opacity:0;transform:perspective(900px) translate3d(0,-60px,170px) rotateX(-16deg) scale(1.06)}}
+    @keyframes rvOut2{0%{opacity:1}100%{opacity:0;transform:perspective(800px) translate3d(0,-40px,140px) rotateX(-12deg) scale(1.1)}}
   }
   @media (min-width:980px){
     @supports (animation-timeline:view()) and (animation-range:cover 0px cover 10px){
@@ -903,7 +913,8 @@
       [].slice.call(el.querySelectorAll('.leg,.pts>li,.row,.tile,.tbl tr,.key,.ch')).forEach(function(it,j){
         if(it.closest('.deep')) return; it.classList.add('r2');
         it.style.setProperty('--d',(ix*0.09+0.22+Math.min(j,10)*0.07).toFixed(2)+'s');
-        var b1=Math.min(a0+30+Math.min(j,8)*6,94), a1=Math.max(a0+8,b1-30); it.style.setProperty('--a',a1+'svh'); it.style.setProperty('--b',b1+'svh'); });
+        var b1=Math.min(a0+30+Math.min(j,8)*6,94), a1=Math.max(a0+8,b1-30); it.style.setProperty('--a',a1+'svh'); it.style.setProperty('--b',b1+'svh');
+        var x1=Math.min(Math.max(0,ix*3-4)+Math.min(j,8)*4,40); it.style.setProperty('--xa',x1+'svh'); it.style.setProperty('--xb',(x1+30)+'svh'); });
       if(el.classList.contains('vis')) el.classList.add('fig');
       var t=el.tagName.toLowerCase(); if(t==='h1'||t==='h2') el.classList.add('hd');
     });
